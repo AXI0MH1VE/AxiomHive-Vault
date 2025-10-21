@@ -1,0 +1,353 @@
+# DETENFORCE Proxy Core Configuration
+# This file defines the core configuration schema for the AILock Detection Enforcement Proxy
+# Version: 2.0
+# Last Updated: 2025-10-21
+
+---
+# Proxy Server Configuration
+server:
+  # Basic server settings
+  host: "0.0.0.0"
+  port: 8080
+  
+  # Request handling
+  max_request_size: "10MB"
+  request_timeout: "30s"
+  idle_timeout: "120s"
+  
+  # Logging configuration
+  logging:
+    level: "info"  # Options: debug, info, warn, error
+    format: "json"  # Options: json, text
+    output: "stdout"  # Options: stdout, stderr, file path
+
+# TLS/HTTPS Configuration
+# Implements secure TLS according to industry best practices
+tls:
+  # Enable TLS/HTTPS
+  enabled: true
+  
+  # TLS listener port
+  port: 8443
+  
+  # Security settings
+  security:
+    # Minimum TLS version - ONLY TLS 1.2+ allowed
+    # Options: "1.2", "1.3"
+    # SSLv3, TLS 1.0, and TLS 1.1 are explicitly disabled for security
+    min_version: "1.2"
+    
+    # Maximum TLS version (optional, defaults to latest)
+    max_version: "1.3"
+    
+    # Cipher suites - Modern, secure cipher suites only
+    # These suites provide forward secrecy and avoid known vulnerabilities
+    cipher_suites:
+      # TLS 1.3 cipher suites (preferred)
+      - "TLS_AES_128_GCM_SHA256"
+      - "TLS_AES_256_GCM_SHA384"
+      - "TLS_CHACHA20_POLY1305_SHA256"
+      
+      # TLS 1.2 cipher suites (with ECDHE for forward secrecy)
+      - "ECDHE-RSA-AES128-GCM-SHA256"
+      - "ECDHE-RSA-AES256-GCM-SHA384"
+      - "ECDHE-RSA-CHACHA20-POLY1305"
+      - "ECDHE-ECDSA-AES128-GCM-SHA256"
+      - "ECDHE-ECDSA-AES256-GCM-SHA384"
+      - "ECDHE-ECDSA-CHACHA20-POLY1305"
+    
+    # Curve preferences for ECDHE
+    curves:
+      - "X25519"
+      - "secp384r1"
+      - "secp256r1"
+    
+    # Additional security settings
+    prefer_server_cipher_suites: true
+    session_tickets: false  # Disable for enhanced forward secrecy
+  
+  # Certificate Configuration - Choose ONE method
+  certificates:
+    # Method 1: ACME (Let's Encrypt) - Recommended for production
+    acme:
+      # Enable ACME automatic certificate provisioning
+      enabled: true
+      
+      # Email for ACME account registration (required)
+      # Used for expiration notices and account recovery
+      email: "security@example.com"
+      
+      # Domains to obtain certificates for (required)
+      # Can be a single domain or multiple domains (SAN certificate)
+      domains:
+        - "api.example.com"
+        - "proxy.example.com"
+      
+      # ACME challenge type
+      # Options:
+      #   - "http-01": HTTP challenge (requires port 80 accessible)
+      #   - "tls-alpn-01": TLS-ALPN challenge (requires port 443 accessible)
+      challenge_type: "http-01"
+      
+      # HTTP-01 challenge port (only used if challenge_type is http-01)
+      http_challenge_port: 80
+      
+      # Directory URL for ACME server
+      # Production: https://acme-v02.api.letsencrypt.org/directory
+      # Staging: https://acme-staging-v02.api.letsencrypt.org/directory
+      directory_url: "https://acme-v02.api.letsencrypt.org/directory"
+      
+      # Use staging environment (for testing)
+      # IMPORTANT: Staging issues untrusted certificates but has higher rate limits
+      # Always test with staging first before production!
+      staging: false
+      
+      # Certificate storage configuration
+      storage:
+        # Path where certificates and private keys are stored
+        # This directory must be writable by the proxy process
+        # Recommended permissions: 0700 (drwx------)
+        path: "/var/lib/ailock/acme-certs"
+        
+        # File permissions for stored certificates
+        cert_permissions: "0644"  # World-readable (certificates are public)
+        key_permissions: "0600"   # Owner read/write only (CRITICAL: private keys must be protected)
+      
+      # Certificate renewal configuration
+      renewal:
+        # Days before expiration to start renewal
+        # Let's Encrypt certificates are valid for 90 days
+        # Recommended: 30 days (renew at 60 days remaining)
+        renewal_window_days: 30
+        
+        # Check interval for renewal check
+        check_interval: "12h"
+        
+        # Retry configuration for failed renewals
+        retry_attempts: 3
+        retry_delay: "1h"
+      
+      # Rate limiting awareness
+      # Let's Encrypt rate limits:
+      #   - 50 certificates per registered domain per week
+      #   - 5 duplicate certificates per week
+      #   - 300 new orders per account per 3 hours
+      rate_limit_buffer: true  # Adds safety delays to avoid hitting rate limits
+    
+    # Method 2: Manual certificate management
+    # Use this if you have certificates from another CA or self-signed
+    manual:
+      # Enable manual certificate mode
+      enabled: false
+      
+      # Path to certificate file (PEM format)
+      # Must contain the full certificate chain
+      cert_file: "/etc/ailock/tls/cert.pem"
+      
+      # Path to private key file (PEM format)
+      # MUST be kept secure with 0600 permissions
+      key_file: "/etc/ailock/tls/key.pem"
+      
+      # Optional: CA certificate bundle for client verification
+      ca_file: "/etc/ailock/tls/ca-bundle.pem"
+      
+      # Watch for certificate changes and reload
+      auto_reload: true
+      
+      # Reload check interval
+      reload_check_interval: "5m"
+
+# AI Detection Configuration
+detection:
+  # Enable AI detection
+  enabled: true
+  
+  # Detection thresholds
+  thresholds:
+    confidence_minimum: 0.75  # Minimum confidence score to flag as AI-generated
+    block_threshold: 0.90      # Confidence score to automatically block
+  
+  # Detection models
+  models:
+    - name: "gpt-detector-v1"
+      weight: 0.4
+    - name: "ai-pattern-analyzer"
+      weight: 0.3
+    - name: "linguistic-fingerprint"
+      weight: 0.3
+  
+  # Content analysis
+  analysis:
+    max_content_length: 50000  # Maximum characters to analyze
+    min_content_length: 50     # Minimum characters required
+    timeout: "5s"              # Analysis timeout
+
+# Rate Limiting Configuration
+rate_limiting:
+  enabled: true
+  
+  # Per-IP rate limits
+  per_ip:
+    requests_per_minute: 60
+    burst: 100
+  
+  # Per-API-key rate limits
+  per_api_key:
+    requests_per_minute: 300
+    burst: 500
+  
+  # Storage backend for rate limit tracking
+  storage:
+    type: "memory"  # Options: memory, redis
+    # redis:
+    #   host: "localhost"
+    #   port: 6379
+    #   db: 0
+
+# Authentication and Authorization
+auth:
+  # API key authentication
+  api_keys:
+    enabled: true
+    header_name: "X-API-Key"
+    
+  # JWT authentication
+  jwt:
+    enabled: false
+    secret_key_env: "JWT_SECRET_KEY"  # Environment variable containing secret
+    issuer: "ailock-proxy"
+    audience: "ailock-api"
+    expiration: "24h"
+
+# Monitoring and Metrics
+monitoring:
+  # Prometheus metrics
+  metrics:
+    enabled: true
+    path: "/metrics"
+    port: 9090
+  
+  # Health check endpoint
+  health:
+    enabled: true
+    path: "/health"
+    
+  # TLS certificate monitoring
+  tls_monitoring:
+    enabled: true
+    # Alert when certificate expires in N days
+    expiry_warning_days: 7
+    # Include certificate details in metrics
+    export_cert_info: true
+
+# Upstream Backend Configuration
+upstream:
+  # Backend service URL
+  url: "http://localhost:3000"
+  
+  # Connection settings
+  connection:
+    timeout: "10s"
+    keep_alive: true
+    max_idle_connections: 100
+  
+  # Health checking
+  health_check:
+    enabled: true
+    interval: "30s"
+    timeout: "5s"
+    unhealthy_threshold: 3
+    healthy_threshold: 2
+
+# Caching Configuration
+caching:
+  enabled: true
+  
+  # Cache backend
+  backend:
+    type: "memory"  # Options: memory, redis
+    max_size: "100MB"
+    ttl: "5m"
+  
+  # Cache rules
+  rules:
+    - path: "/api/detection/analyze"
+      ttl: "1m"
+      cache_key_headers:
+        - "Content-Type"
+
+# Environment-Specific Configuration Examples
+# Use these as templates for different deployment environments
+
+# Example: Production Configuration
+# environments:
+#   production:
+#     server:
+#       host: "0.0.0.0"
+#       port: 8080
+#     tls:
+#       enabled: true
+#       port: 443
+#       security:
+#         min_version: "1.2"
+#       certificates:
+#         acme:
+#           enabled: true
+#           email: "security@example.com"
+#           domains:
+#             - "api.example.com"
+#           challenge_type: "http-01"
+#           staging: false
+#           storage:
+#             path: "/var/lib/ailock/certs"
+#           renewal:
+#             renewal_window_days: 30
+
+# Example: Staging Configuration  
+# environments:
+#   staging:
+#     server:
+#       host: "0.0.0.0"
+#       port: 8080
+#     tls:
+#       enabled: true
+#       port: 8443
+#       security:
+#         min_version: "1.2"
+#       certificates:
+#         acme:
+#           enabled: true
+#           email: "devops@example.com"
+#           domains:
+#             - "staging-api.example.com"
+#           challenge_type: "http-01"
+#           staging: true  # Use Let's Encrypt staging
+#           storage:
+#             path: "/var/lib/ailock/staging-certs"
+#           renewal:
+#             renewal_window_days: 30
+
+# Example: Development Configuration (No TLS)
+# environments:
+#   development:
+#     server:
+#       host: "127.0.0.1"
+#       port: 8080
+#     tls:
+#       enabled: false
+#     monitoring:
+#       metrics:
+#         enabled: true
+#         port: 9090
+
+# Security Notes:
+# 1. Always use TLS 1.2 or higher in production
+# 2. Never commit private keys or secrets to version control
+# 3. Use environment variables for sensitive configuration
+# 4. Regularly update cipher suites to remove deprecated algorithms
+# 5. Monitor certificate expiration and renewal status
+# 6. Use staging environment before deploying to production
+# 7. Implement proper file permissions on certificate storage directories
+# 8. Enable monitoring and alerting for certificate expiration
+# 9. Keep the proxy software and TLS libraries updated
+# 10. Review Let's Encrypt rate limits before deployment
