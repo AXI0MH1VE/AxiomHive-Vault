@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+  labels:
+    app: auth-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+      - name: auth-service
+        image: ailock-v_inf-auth-service:latest
+        ports:
+        - containerPort: 50051
+        env:
+        - name: DB_HOST
+          value: "postgres-service"
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: ailock-secrets
+              key: jwt_secret
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: detenforce-proxy
+  labels:
+    app: detenforce-proxy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: detenforce-proxy
+  template:
+    metadata:
+      labels:
+        app: detenforce-proxy
+    spec:
+      containers:
+      - name: detenforce-proxy
+        image: ailock-v_inf-detenforce-proxy:latest
+        ports:
+        - containerPort: 8443
+        volumeMounts:
+        - name: proxy-config
+          mountPath: /app/config
+      volumes:
+      - name: proxy-config
+        configMap:
+          name: proxy-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-app
+  labels:
+    app: client-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: client-app
+  template:
+    metadata:
+      labels:
+        app: client-app
+    spec:
+      containers:
+      - name: client-app
+        image: ailock-v_inf-client-app:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NEXT_PUBLIC_API_GATEWAY
+          value: "detenforce-proxy-service"
