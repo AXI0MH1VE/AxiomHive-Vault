@@ -1,0 +1,49 @@
+# Large or binary files that can bloat repository
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.exe
+*.dll
+*.so
+*.dylib
+*.tar.gz
+*.zip
+*.rar
+*.bz2
+*.7z
+*.iso
+*.img
+*.dmg
+*.bin
+*.o
+*.obj
+*.a
+*.lib
+*.pdb
+*.ilk
+*.idb
+*.dia
+*.manifest
+*.pdb
+# Generated files
+node_modules/
+build/
+dist/
+*.bundle.js
+*.min.js
+*.css.map
+*.js.map
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+# OS
+.DS_Store
+Thumbs.db
+# IDE
+.vscode/
+.idea/
