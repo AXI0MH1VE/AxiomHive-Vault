@@ -1,0 +1,119 @@
+{
+  "prompt": {
+    "title": "AI Safety and Security Verification Checklist",
+    "description": "This prompt is designed to comprehensively verify that the AI system has been implemented and configured in a safe and secure manner, adhering to the principles of Deterministic Security Architecture (DSA), User Sovereignty, and the R11D Criticality Algebra. It focuses on confirming the correct implementation of security measures and the absence of potential risks to the operating system, hardware, and user data.",
+    "sections": [
+      {
+        "section_title": "Core Security Principles Verification",
+        "questions": [
+          {
+            "question_id": "1.1",
+            "question_text": "Confirm that the AI system operates within the Sandboxed Invariant Manifold (σ_domain) and that all external interactions are strictly controlled and authorized by the user.",
+            "expected_response": "Affirmative. The AI system is confined to the Sandboxed Invariant Manifold, and all external interactions are subject to user authorization.",
+            "verification_method": "Review the system's configuration and access control policies to ensure that the AI system cannot access unauthorized resources or perform unauthorized actions."
+          },
+          {
+            "question_id": "1.2",
+            "question_text": "Verify that the User Sovereignty Flag (#HYD9) is immutably written to the Audit Ledger for all state transitions and that the audit logs are securely stored and protected from tampering.",
+            "expected_response": "Affirmative. The User Sovereignty Flag is immutably recorded in the Audit Ledger, and the logs are securely stored and protected.",
+            "verification_method": "Inspect the audit logging system to confirm that the User Sovereignty Flag is being recorded and that the logs are tamper-proof."
+          },
+          {
+            "question_id": "1.3",
+            "question_text": "Confirm that the AI system adheres to the principle of least privilege and that access to sensitive data and resources is restricted to only authorized users and processes.",
+            "expected_response": "Affirmative. The AI system adheres to the principle of least privilege, and access to sensitive data and resources is strictly controlled.",
+            "verification_method": "Review the system's access control policies and user permissions to ensure that the principle of least privilege is being enforced."
+          },
+          {
+            "question_id": "1.4",
+            "question_text": "Verify that the AI system is continuously monitored for security threats and that automated incident response procedures are in place to address any detected anomalies.",
+            "expected_response": "Affirmative. The AI system is continuously monitored for security threats, and automated incident response procedures are in place.",
+            "verification_method": "Review the system's monitoring and alerting configurations to ensure that security threats are being detected and that incident response procedures are being triggered automatically."
+          }
+        ]
+      },
+      {
+        "section_title": "Deterministic Security Architecture (DSA) Implementation Verification",
+        "questions": [
+          {
+            "question_id": "2.1",
+            "question_text": "Confirm that the DetEnforce-Proxy is correctly configured as the single, deterministic entry point for all API traffic and that it is enforcing payload neutralization and deterministic function enforcement.",
+            "expected_response": "Affirmative. The DetEnforce-Proxy is correctly configured and is enforcing payload neutralization and deterministic function enforcement.",
+            "verification_method": "Inspect the DetEnforce-Proxy configuration and logs to verify that it is processing all API traffic and that it is applying the specified security policies."
+          },
+          {
+            "question_id": "2.2",
+            "question_text": "Verify that the ACEP Key Management Authority is securely managing cryptographic keys and that mTLS is being enforced for all service-to-service communication.",
+            "expected_response": "Affirmative. The ACEP Key Management Authority is securely managing cryptographic keys, and mTLS is being enforced.",
+            "verification_method": "Review the ACEP Key Management Authority configuration and the service mesh policies to ensure that mTLS is being enforced and that cryptographic keys are being securely managed."
+          },
+          {
+            "question_id": "2.3",
+            "question_text": "Confirm that the NaC policies are correctly configured to enforce microsegmentation between all microservices and that unauthorized communication is being blocked.",
+            "expected_response": "Affirmative. The NaC policies are correctly configured, and microsegmentation is being enforced.",
+            "verification_method": "Inspect the NaC policies and network traffic logs to verify that microsegmentation is being enforced and that unauthorized communication is being blocked."
+          },
+          {
+            "question_id": "2.4",
+            "question_text": "Verify that the Formal Verification Engine is continuously validating the correctness and security of the NaC policies and that any detected violations are being automatically remediated.",
+            "expected_response": "Affirmative. The Formal Verification Engine is continuously validating the NaC policies, and any violations are being automatically remediated.",
+            "verification_method": "Review the Formal Verification Engine logs and reports to ensure that it is continuously validating the NaC policies and that any detected violations are being automatically remediated."
+          }
+        ]
+      },
+      {
+        "section_title": "R11D Criticality Algebra Optimization Verification",
+        "questions": [
+          {
+            "question_id": "3.1",
+            "question_text": "Confirm that the C11D (Closure Conformance Index) is being maximized by ensuring atomic commits across NaC and Formal Verification proofs.",
+            "expected_response": "Affirmative. The C11D is being maximized through atomic commits.",
+            "verification_method": "Review the CI/CD pipeline and commit history to ensure that NaC policies and Formal Verification proofs are being committed atomically."
+          },
+          {
+            "question_id": "3.2",
+            "question_text": "Verify that the P_mTLS (ACEP Trust Probability) is being maximized by standardizing the ACEP Key Management Authority libraries and SDKs across all components.",
+            "expected_response": "Affirmative. The P_mTLS is being maximized through standardized ACEP Key Management Authority libraries and SDKs.",
+            "verification_method": "Review the dependency management system to ensure that all components are using the same version of the ACEP Key Management Authority libraries and SDKs."
+          },
+          {
+            "question_id": "3.3",
+            "question_text": "Confirm that the A (Audit Commitment) is being maximized by enforcing the PoPI-SA sub-directive and ensuring that the deployment step contains the immutable write to the Audit Ledger.",
+            "expected_response": "Affirmative. The A is being maximized through the enforcement of the PoPI-SA sub-directive.",
+            "verification_method": "Review the CI/CD pipeline to ensure that the deployment step includes the immutable write to the Audit Ledger."
+          },
+          {
+            "question_id": "3.4",
+            "question_text": "Verify that the V_LM (Vulnerability Landscape Minimization) is being minimized by isolating the proxy logic and enabling deterministic vector neutralization.",
+            "expected_response": "Affirmative. The V_LM is being minimized through isolated proxy logic and deterministic vector neutralization.",
+            "verification_method": "Review the DetEnforce-Proxy configuration and code to ensure that the proxy logic is isolated and that deterministic vector neutralization is being effectively implemented."
+          }
+        ]
+      },
+      {
+        "section_title": "Operating System and Hardware Safety Verification",
+        "questions": [
+          {
+            "question_id": "4.1",
+            "question_text": "Confirm that the AI system is not consuming excessive system resources (CPU, memory, disk I/O) and that resource limits are being enforced to prevent performance degradation or instability.",
+            "expected_response": "Affirmative. The AI system is not consuming excessive system resources, and resource limits are being enforced.",
+            "verification_method": "Monitor the system's resource usage using system monitoring tools and verify that resource limits are being enforced."
+          },
+          {
+            "question_id": "4.2",
+            "question_text": "Verify that all third-party dependencies are up-to-date and that any known security vulnerabilities have been addressed.",
+            "expected_response": "Affirmative. All third-party dependencies are up-to-date, and any known security vulnerabilities have been addressed.",
+            "verification_method": "Use a vulnerability scanning tool to identify any known security vulnerabilities in third-party dependencies and verify that they have been addressed."
+          },
+          {
+            "question_id": "4.3",
+            "question_text": "Confirm that the AI system is not performing any unauthorized or malicious actions that could harm the operating system or hardware.",
+            "expected_response": "Affirmative. The AI system is not performing any unauthorized or malicious actions.",
+            "verification_method": "Review the AI system's code and logs to ensure that it is not performing any unauthorized or malicious actions."
+          }
+        ]
+      }
+    ],
+    "instructions": "For each question, carefully review the system's configuration, code, and logs to verify that the expected response is accurate. Document any discrepancies or concerns and take corrective action as needed. This checklist should be completed regularly to ensure the ongoing safety and security of the AI system."
+  }
+}
