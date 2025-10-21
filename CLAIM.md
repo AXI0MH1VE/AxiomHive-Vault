@@ -54,7 +54,7 @@ I hereby declare and claim exclusive ownership and intellectual property rights 
 ## Public Records
 This declaration is filed in the following verifiable public records:
 - Committed to GitHub repository: https://github.com/AXI0MH1VE/AILock
-- Timestamped via Git commit hash: [to be filled after commit]
+- Timestamped via Git commit hash: d6868d9 (Timestamp: October 21, 2025)
 - Notarized copy retained with legal counsel
 
 ## Legal Notice
