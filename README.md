@@ -1,8 +1,12 @@
-# AILock
+# AILock 🔐
 
-## Overview
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Go Report Card](https://goreportcard.com/badge/github.com/AXI0MH1VE/AILock)](https://goreportcard.com/report/github.com/AXI0MH1VE/AILock)
+[![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/AXI0MH1VE/AILock)](https://github.com/AXI0MH1VE/AILock/blob/main/go.mod)
 
-AILock is a modern authentication and authorization system designed to provide secure access control mechanisms for applications. Built with a focus on security, flexibility, and ease of integration, AILock offers a comprehensive solution for managing user authentication flows.
+A modern, secure, and developer-friendly authentication and authorization system for microservices, APIs, and distributed applications. Built with Go for high performance and scalability.
+
+**🚀 Try it out: [Quick Start Guide](#quick-start)**
 
 Whether you're building a microservices architecture, a monolithic application, or need to add authentication to an existing system, AILock provides the tools and flexibility to secure your applications with industry-standard protocols and best practices.
 
@@ -368,6 +372,24 @@ For questions, issues, or feature requests:
 - [ ] Enhanced monitoring and metrics
 - [ ] Kubernetes deployment templates
 - [ ] CLI tool for management
+
+## Contributors
+
+Contributions are welcome! See [CONTRIBUTING.md](ARTIFACTS/CONTRIBUTING.md) for guidelines.
+
+### Stargazers
+
+⭐ **Star this repo** to show your support and stay updated!
+
+## Sponsors
+
+Supporting open source development:
+
+[Add sponsor buttons or links here]
+
+## License & Intellectual Property
+
+This project is licensed under the [MIT License](LICENSE). See our [IP Claims](CLAIM.md) for ownership declaration and protection details.
 
 ---
 
