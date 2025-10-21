@@ -4,8 +4,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"math"
+	"os"
 	"time"
 )
 
@@ -13,28 +13,28 @@ import (
 
 // Constants as per SIMULATION_MODEL.md
 const (
-	AF_DEFAULT = 1000.0
-	WEIGHT_T   = 0.35
-	WEIGHT_S   = 0.35
-	WEIGHT_C   = 0.30
+	AF_DEFAULT   = 1000.0
+	WEIGHT_T     = 0.35
+	WEIGHT_S     = 0.35
+	WEIGHT_C     = 0.30
 	L2_THRESHOLD = 0.50
 	L3_THRESHOLD = 0.80
 )
 
 // AdversarialChallenge structure mirrors ARTIFACTS/ADVERSARIAL_CHALLENGE.json
 type AdversarialChallenge struct {
-	ChallengeID string `json:"challenge_id"`
+	ChallengeID  string `json:"challenge_id"`
 	InitialState struct {
-		TargetComponent string  `json:"target_component"`
+		TargetComponent           string  `json:"target_component"`
 		FunctionalBaselineCostVCU float64 `json:"functional_baseline_cost_VCU"`
-		TemporalRiskT float64 `json:"temporal_risk_T"`
-		SpatialRiskS float64 `json:"spatial_risk_S"`
-		ContextualRiskC float64 `json:"contextual_risk_C"`
+		TemporalRiskT             float64 `json:"temporal_risk_T"`
+		SpatialRiskS              float64 `json:"spatial_risk_S"`
+		ContextualRiskC           float64 `json:"contextual_risk_C"`
 	} `json:"initial_state"`
 	RequiredResponse struct {
-		TargetAdaptiveLevel string `json:"target_adaptive_level"`
+		TargetAdaptiveLevel     string  `json:"target_adaptive_level"`
 		RequiredAsymmetryFactor float64 `json:"required_asymmetry_factor"`
-		TargetMTCSeconds int `json:"target_mtc_seconds"`
+		TargetMTCSeconds        int     `json:"target_mtc_seconds"`
 	} `json:"required_response"`
 }
 
@@ -61,14 +61,14 @@ func DetermineAdaptiveLevel(r11d float64) string {
 // For simplicity, Formal Verification cost is fixed at 100.0 VCU per component.
 func CalculateACEPCost(baselineCost, asymmetryFactor float64) float64 {
 	C_Formal := 100.0 // Fixed cost for verifiable formal proof (TLA+/Coq)
-	C_ACEP := baselineCost * (1 + asymmetryFactor) + C_Formal
+	C_ACEP := baselineCost*(1+asymmetryFactor) + C_Formal
 	return math.Round(C_ACEP*100) / 100
 }
 
 func main() {
 	// 1. LOAD ADVERSARIAL CHALLENGE
-	challengePath := "ARTIFACTS/ADVERSARIAL_CHALLENGE.json"
-	data, err := ioutil.ReadFile(challengePath)
+	challengePath := "ADVERSARIAL_CHALLENGE.json"
+	data, err := os.ReadFile(challengePath)
 	if err != nil {
 		fmt.Printf("FATAL ERROR: Failed to load challenge file: %v\n", err)
 		return
