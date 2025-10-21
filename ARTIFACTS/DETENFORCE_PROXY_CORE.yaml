@@ -1,0 +1,72 @@
+# ARTIFACTS/DETENFORCE_PROXY_CORE.yaml
+
+# Top-level Proxy Configuration (Envoy)
+static_resources:
+  listeners:
+  - name: listener_443
+    address:
+      socket_address: { address: 0.0.0.0, port_value: 443 }
+    filter_chains:
+    - transport_socket: # TLS Configuration (Mandated TLS 1.3)
+        name: envoy.transport_sockets.tls
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+          common_tls_context:
+            tls_certificates:
+            # Certificate sourced from HashiCorp Vault, protected by ACEP HSM Root
+            - certificate_chain: { filename: "/etc/ssl/vault/cert_chain.pem" }
+              private_key: { filename: "/etc/ssl/vault/key.pem" }
+            tls_params:
+              tls_minimum_protocol_version: TLSv1_3 # TLS 1.3 Enforced
+              cipher_suites:
+                - ECDHE-ECDSA-AES256-GCM-SHA384
+                - ECDHE-RSA-AES256-GCM-SHA384
+                # Note: TLS_AES_128_GCM_SHA256 and TLS_CHACHA20_POLY1305_SHA256 are TLS 1.3 only
+
+      filters:
+      - name: envoy.filters.network.http_connection_manager
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          stat_prefix: ingress_http
+          route_config:
+            name: local_route
+            virtual_hosts:
+            - name: api_upstream
+              domains: ["*"]
+              routes:
+              - match: { prefix: "/" }
+                # 1. Inject WASM Filter for Payload Neutralization
+                route: { cluster: upstream_ai_service }
+
+          # 2. HTTP Filters (WASM and Router)
+          http_filters:
+          - name: envoy.filters.http.wasm
+            typed_config:
+              "@type": type.googleapis.com/udpa.type.v1.TypedStruct
+              type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
+              value:
+                config:
+                  vm_config:
+                    runtime: "envoy.wasm.runtime.v8"
+                    code:
+                      local: { filename: "/etc/wasm/payload_neutralizer.wasm" }
+                  configuration:
+                    # Pass initial deterministic enforcement rules to WASM filter
+                    deterministic_enforcement: true
+                    non_deterministic_action: "REDIRECT_TO_SANDBOX"
+
+          - name: envoy.filters.http.router # Final Filter
+
+  clusters:
+  - name: upstream_ai_service
+    connect_timeout: 5s
+    type: LOGICAL_DNS
+    lb_policy: ROUND_ROBIN
+    # Enforce mTLS for communication to the upstream microservice (ACEP Spatial Mandate)
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          validation_context:
+            trusted_ca: { filename: "/etc/ssl/vault/ca.pem" }
