@@ -1,0 +1,63 @@
+# SUPRAPROTOCOL V∞: Pristine Initialization and Isolation via Docker VENV
+version: '3.8'
+
+services:
+  # 1. Core Authentication Service (Go)
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    command: ["./auth-service", "--port=50051"]
+    ports:
+      - "50051:50051"
+    environment:
+      - DB_HOST=postgres
+      - JWT_SECRET=${JWT_SECRET_KEY}
+    networks:
+      - ailock_net
+
+  # 2. Frontend Management Dashboard (Next.js 14)
+  client-app:
+    build:
+      context: ./client-app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_GATEWAY=detenforce-proxy:8443
+    depends_on:
+      - detenforce-proxy
+    networks:
+      - ailock_net
+      
+  # 3. Security Ingress Proxy (Go)
+  detenforce-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    command: ["./detenforce-proxy", "--config=/app/config/proxy_core.yaml"]
+    ports:
+      - "8443:8443" # External HTTPS access
+    networks:
+      - ailock_net
+
+  # 4. Database (PostgreSQL for user/policy data)
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=ailock_user
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=ailock_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - ailock_net
+
+networks:
+  ailock_net:
+    driver: bridge
+
+volumes:
+  db_data:

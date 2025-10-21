@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package rbac.v1;
+
+option go_package = "AILock-V_INF/proto/rbac;rbacproto";
+
+service RBACService {
+  // Checks if a user has the required permission for an action
+  rpc CheckPermission (CheckPermissionRequest) returns (CheckPermissionResponse);
+
+  // Assigns a role to a user
+  rpc AssignRole (AssignRoleRequest) returns (AssignRoleResponse);
+}
+
+// Requests
+message CheckPermissionRequest {
+  string user_id = 1;
+  string resource = 2;
+  string action = 3;
+}
+
+message AssignRoleRequest {
+  string user_id = 1;
+  string role_id = 2;
+}
+
+// Responses
+message CheckPermissionResponse {
+  bool has_permission = 1;
+}
+
+message AssignRoleResponse {
+  bool success = 1;
+  string message = 2;
+}

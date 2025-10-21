@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package audit.v1;
+
+option go_package = "AILock-V_INF/proto/audit;auditproto";
+
+service AuditService {
+  // Emits an audit event for logging and compliance
+  rpc EmitEvent (EmitEventRequest) returns (EmitEventResponse);
+}
+
+// Requests
+message EmitEventRequest {
+  string event_type = 1; // e.g., AuthSuccess, AuthFailure, PolicyChange
+  string user_id = 2;
+  string details = 3; // JSON string of event details
+  int64 timestamp = 4;
+}
+
+// Responses
+message EmitEventResponse {
+  bool success = 1;
+  string event_id = 2;
+}

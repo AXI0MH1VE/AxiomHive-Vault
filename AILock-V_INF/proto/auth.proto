@@ -1,0 +1,51 @@
+// SUPRAPROTOCOL V∞: Contract-First API for core security boundary.
+syntax = "proto3";
+
+package auth.v1;
+
+option go_package = "AILock-V_INF/proto/auth;authproto";
+
+service AuthService {
+  // Initiates a secure login flow (e.g., returns JWTs)
+  rpc Login (LoginRequest) returns (LoginResponse);
+  
+  // Validates a given JWT and returns user claims
+  rpc ValidateToken (ValidateTokenRequest) returns (ValidateTokenResponse);
+  
+  // Revokes a token ID (used for logout/security events)
+  rpc RevokeToken (RevokeTokenRequest) returns (RevokeTokenResponse);
+}
+
+// Requests
+message LoginRequest {
+  string username = 1;
+  string password = 2; // Handled securely, transmitted over TLS/gRPC
+}
+
+message ValidateTokenRequest {
+  string jwt_token = 1;
+}
+
+message RevokeTokenRequest {
+  string token_id = 1;
+  string user_id = 2;
+}
+
+// Responses
+message LoginResponse {
+  string access_token = 1; // JWE-encrypted JWT
+  string refresh_token = 2;
+  int64 expires_at = 3;
+}
+
+message ValidateTokenResponse {
+  bool is_valid = 1;
+  string user_id = 2;
+  repeated string roles = 3;
+  map<string, bool> permissions = 4; // Fine-grained permissions
+}
+
+message RevokeTokenResponse {
+  bool success = 1;
+  string message = 2;
+}
