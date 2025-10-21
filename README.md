@@ -4,6 +4,8 @@
 
 AILock is a modern authentication and authorization system designed to provide secure access control mechanisms for applications. Built with a focus on security, flexibility, and ease of integration, AILock offers a comprehensive solution for managing user authentication flows.
 
+Whether you're building a microservices architecture, a monolithic application, or need to add authentication to an existing system, AILock provides the tools and flexibility to secure your applications with industry-standard protocols and best practices.
+
 ## Project Structure
 
 The project is organized as a Go workspace with the following key components:
@@ -30,6 +32,8 @@ The project is organized as a Go workspace with the following key components:
 
 - Go 1.19 or higher
 - Git
+- A supported database (PostgreSQL, MySQL, or SQLite)
+- Redis (optional, for session management)
 
 ### Setup
 
@@ -41,170 +45,330 @@ cd AILock
 
 2. Install dependencies:
 ```bash
-go work sync
 go mod download
 ```
 
-3. Build the project:
+3. Configure the application:
 ```bash
-go build ./...
+cp config.example.yaml config.yaml
+# Edit config.yaml with your settings
 ```
 
-## Proxy Configuration
+4. Run database migrations:
+```bash
+go run cmd/migrate/main.go up
+```
 
-AILock now includes **DetEnforce Proxy**, a powerful application-layer security proxy that provides advanced protection mechanisms including request filtering, rate limiting, and security policy enforcement.
+5. Start the server:
+```bash
+go run cmd/server/main.go
+```
 
-### Proxy Overview
+The server will start on `http://localhost:8080` by default.
 
-The DetEnforce Proxy acts as a security gateway between clients and your AILock services, offering:
+## Quick Start
 
-- **Request Validation**: Comprehensive validation of incoming requests
-- **Rate Limiting**: Protection against abuse and DoS attacks
-- **Security Policies**: Configurable security rules and enforcement
-- **Logging & Monitoring**: Detailed audit trails of all proxy activity
-- **TLS Termination**: Secure communication with automatic certificate management
+### Basic Authentication Flow
 
-### Proxy Setup
+1. **Register a new user**:
+```bash
+curl -X POST http://localhost:8080/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john_doe",
+    "email": "john@example.com",
+    "password": "SecurePass123!"
+  }'
+```
 
-The proxy configuration is located in `ARTIFACTS/DETENFORCE_PROXY_CORE.yaml`. This YAML file contains all the necessary settings for deploying and operating the proxy.
+2. **Login to get access token**:
+```bash
+curl -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john_doe",
+    "password": "SecurePass123!"
+  }'
+```
 
-#### Configuration File Structure
+Response:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "Bearer",
+  "expires_in": 3600
+}
+```
 
-The proxy configuration includes the following key sections:
+3. **Access protected resources**:
+```bash
+curl -X GET http://localhost:8080/api/v1/user/profile \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
 
-1. **Server Settings**: Listen address, ports, and TLS configuration
-2. **Upstream Targets**: Backend services that the proxy forwards requests to
-3. **Security Policies**: Rules for request filtering and validation
-4. **Rate Limiting**: Thresholds and rate limit configurations
-5. **Logging**: Audit log settings and output destinations
+## Usage
 
-#### Example Configuration
+### Configuration
+
+AILock uses a YAML configuration file. Key configuration options include:
 
 ```yaml
-# Basic proxy configuration example
 server:
-  listen_address: "0.0.0.0"
-  port: 8443
-  tls:
-    enabled: true
-    cert_file: "/path/to/cert.pem"
-    key_file: "/path/to/key.pem"
+  host: "0.0.0.0"
+  port: 8080
+  read_timeout: 30s
+  write_timeout: 30s
 
-upstreams:
-  - name: "ailock-api"
-    address: "localhost:8080"
-    health_check:
-      enabled: true
-      interval: 30s
+auth:
+  jwt_secret: "your-secret-key-change-this"
+  access_token_duration: 1h
+  refresh_token_duration: 168h  # 7 days
+  bcrypt_cost: 12
 
-security:
-  rate_limiting:
-    enabled: true
-    requests_per_minute: 100
-  request_validation:
-    enabled: true
-    max_body_size: 1048576
+database:
+  type: "postgres"
+  host: "localhost"
+  port: 5432
+  name: "ailock"
+  user: "ailock_user"
+  password: "your_password"
+  ssl_mode: "disable"
 
 logging:
   level: "info"
   format: "json"
-  output: "/var/log/detenforce-proxy.log"
+  audit_enabled: true
 ```
 
-### Deploying the Proxy
+### Role-Based Access Control (RBAC)
 
-1. **Configure the proxy**: Edit `ARTIFACTS/DETENFORCE_PROXY_CORE.yaml` to match your environment:
-   - Set the appropriate listen address and port
-   - Configure upstream backend services
-   - Adjust security policies and rate limits as needed
-   - Set up TLS certificates for production use
+AILock implements a flexible RBAC system:
 
-2. **Start the proxy** (example command, adjust based on your deployment method):
-```bash
-# Using the configuration file
-./detenforce-proxy --config ARTIFACTS/DETENFORCE_PROXY_CORE.yaml
+```go
+// Define roles
+roles := []string{"admin", "user", "moderator"}
+
+// Assign permissions to roles
+permissions := map[string][]string{
+    "admin": {"read", "write", "delete", "admin"},
+    "moderator": {"read", "write", "moderate"},
+    "user": {"read"},
+}
+
+// Check permissions in your handlers
+if ailock.HasPermission(userID, "write") {
+    // Allow action
+}
 ```
 
-3. **Verify proxy operation**:
-```bash
-# Check proxy health
-curl -k https://localhost:8443/health
+### API Integration
 
-# Test proxied request to AILock
-curl -k https://localhost:8443/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username": "user", "password": "pass"}'
+Integrate AILock into your Go application:
+
+```go
+package main
+
+import (
+    "github.com/AXI0MH1VE/AILock/pkg/auth"
+    "github.com/AXI0MH1VE/AILock/pkg/middleware"
+)
+
+func main() {
+    // Initialize AILock
+    authService := auth.NewService(config)
+    
+    // Use middleware for protected routes
+    router.Use(middleware.AuthRequired(authService))
+    router.Use(middleware.RoleRequired("admin"))
+    
+    // Your application logic
+}
 ```
 
-### Proxy Integration with AILock
+### DetEnforce Proxy
 
-To integrate the proxy with your AILock deployment:
+The DetEnforce proxy provides an additional security layer:
 
-1. **Update client configurations** to point to the proxy endpoint instead of directly to AILock
-2. **Configure the proxy upstream** to point to your AILock service backend
-3. **Set up security policies** that align with your authentication requirements
-4. **Monitor proxy logs** for security events and performance metrics
-
-### Security Considerations
-
-- **TLS/SSL**: Always enable TLS in production environments
-- **Rate Limiting**: Adjust rate limits based on your expected traffic patterns
-- **Request Validation**: Configure appropriate request size limits and validation rules
-- **Logging**: Ensure audit logs are properly stored and rotated
-- **Upstream Health Checks**: Enable health checking to ensure high availability
-
-### Troubleshooting
-
-- **Connection Issues**: Verify the proxy is listening on the correct address/port
-- **Certificate Errors**: Ensure TLS certificates are valid and properly configured
-- **Rate Limiting**: Check logs if requests are being blocked due to rate limits
-- **Upstream Failures**: Verify backend services are running and accessible
-
-For detailed configuration options, refer to the `DETENFORCE_PROXY_CORE.yaml` file in the ARTIFACTS directory.
-
-## Usage
-
-Start the AILock service:
 ```bash
-go run main.go
+# Start the proxy
+go run cmd/proxy/main.go --config proxy-config.yaml
 ```
 
-### API Examples
+Proxy features:
+- Request filtering and validation
+- Rate limiting
+- DDoS protection
+- Request/response logging
+- Custom security rules
 
-Authentication endpoint:
+## API Documentation
+
+### Authentication Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/auth/register` | Register a new user |
+| POST | `/api/v1/auth/login` | Login and receive tokens |
+| POST | `/api/v1/auth/refresh` | Refresh access token |
+| POST | `/api/v1/auth/logout` | Logout and invalidate tokens |
+| POST | `/api/v1/auth/verify` | Verify email address |
+| POST | `/api/v1/auth/reset-password` | Request password reset |
+
+### User Management Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/user/profile` | Get user profile |
+| PUT | `/api/v1/user/profile` | Update user profile |
+| DELETE | `/api/v1/user/account` | Delete user account |
+| GET | `/api/v1/user/sessions` | List active sessions |
+| DELETE | `/api/v1/user/sessions/:id` | Revoke specific session |
+
+### Admin Endpoints (Requires Admin Role)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/admin/users` | List all users |
+| GET | `/api/v1/admin/users/:id` | Get user details |
+| PUT | `/api/v1/admin/users/:id/role` | Update user role |
+| DELETE | `/api/v1/admin/users/:id` | Delete user |
+| GET | `/api/v1/admin/audit-logs` | View audit logs |
+
+## Security Best Practices
+
+1. **Always use HTTPS in production** - Never transmit tokens over unencrypted connections
+2. **Rotate JWT secrets regularly** - Update your JWT secret keys periodically
+3. **Implement rate limiting** - Protect against brute force attacks
+4. **Enable audit logging** - Monitor authentication events for suspicious activity
+5. **Use strong password policies** - Enforce minimum complexity requirements
+6. **Implement token refresh** - Use short-lived access tokens with refresh token rotation
+7. **Secure your configuration** - Never commit secrets to version control
+
+## Development
+
+### Running Tests
+
 ```bash
-curl -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username": "user", "password": "pass"}'
+# Run all tests
+go test ./...
+
+# Run tests with coverage
+go test -cover ./...
+
+# Run tests with verbose output
+go test -v ./...
+```
+
+### Building
+
+```bash
+# Build the main server
+go build -o bin/ailock cmd/server/main.go
+
+# Build the proxy
+go build -o bin/ailock-proxy cmd/proxy/main.go
+
+# Build for production (with optimizations)
+CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags=\"-s -w\" -o bin/ailock cmd/server/main.go
+```
+
+### Docker Support
+
+```bash
+# Build Docker image
+docker build -t ailock:latest .
+
+# Run with Docker Compose
+docker-compose up -d
+```
+
+Example `docker-compose.yaml`:
+```yaml
+version: '3.8'
+services:
+  ailock:
+    image: ailock:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+    depends_on:
+      - postgres
+  
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=ailock
+      - POSTGRES_USER=ailock_user
+      - POSTGRES_PASSWORD=your_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
 ```
 
 ## Contributing
 
-We welcome contributions to AILock! Here's how you can help:
+We welcome contributions to AILock! Please follow these guidelines:
 
-1. **Fork the Repository**: Create your own fork of the project
-2. **Create a Feature Branch**: `git checkout -b feature/your-feature-name`
-3. **Make Your Changes**: Implement your feature or bug fix
-4. **Write Tests**: Ensure your code is well-tested
-5. **Commit Your Changes**: Use clear and descriptive commit messages
-6. **Push to Your Fork**: `git push origin feature/your-feature-name`
-7. **Submit a Pull Request**: Open a PR with a clear description of your changes
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### Development Guidelines
+Please ensure:
+- All tests pass
+- Code follows Go best practices
+- Documentation is updated
+- Commit messages are clear and descriptive
 
-- Follow Go best practices and idioms
-- Write comprehensive tests for new functionality
-- Update documentation as needed
-- Ensure all tests pass before submitting PRs
+## Troubleshooting
+
+### Common Issues
+
+**Issue**: "Database connection failed"
+- **Solution**: Verify database credentials in `config.yaml` and ensure the database server is running
+
+**Issue**: "Invalid JWT token"
+- **Solution**: Check that the JWT secret in your config matches the one used to sign tokens
+
+**Issue**: "Permission denied"
+- **Solution**: Verify the user has the required role/permissions for the requested resource
+
+**Issue**: "Port already in use"
+- **Solution**: Change the port in `config.yaml` or stop the process using the current port
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Contact
+## Acknowledgments
 
-For questions, issues, or suggestions, please open an issue on GitHub or contact the maintainers.
+- Built with Go and industry-standard security libraries
+- Inspired by modern authentication best practices
+- Community contributions and feedback
+
+## Support
+
+For questions, issues, or feature requests:
+- Open an issue on GitHub
+- Check existing documentation
+- Review closed issues for solutions
+
+## Roadmap
+
+- [ ] Multi-factor authentication (MFA)
+- [ ] OAuth 2.0 provider support (Google, GitHub, etc.)
+- [ ] WebAuthn/FIDO2 support
+- [ ] GraphQL API endpoints
+- [ ] Enhanced monitoring and metrics
+- [ ] Kubernetes deployment templates
+- [ ] CLI tool for management
 
 ---
 
-Built with ❤️ by the AILock team
+**Note**: This is a security-focused project. Always review the code and configuration before deploying to production environments.
