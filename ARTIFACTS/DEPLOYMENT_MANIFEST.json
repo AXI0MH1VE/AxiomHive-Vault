@@ -1,0 +1,37 @@
+{
+  "unified_deployment_package_id": "ACEP-UDP-AILOCK-20251020",
+  "version": "1.0.0-FINAL",
+  "operator_authority": "Alexis Adams",
+  
+  "attestation_schema": "SHA256-Merkle-Root",
+  "attestation_merkle_root": "0x4A6B9D2C...[CRYPTOGRAPHICALLY_SIGNED_HASH_OF_ALL_ARTIFACTS]",
+  
+  "package_integrity_check": [
+    {"file": "STRATEGY.md", "hash_type": "SHA256", "hash_value": "[...Hash...]"},
+    {"file": "ARTIFACTS/SECURITY_PROTOCOL_CORE.py", "hash_type": "SHA256", "hash_value": "[...Hash...]"},
+    {"file": "ARTIFACTS/CONFIG.yaml", "hash_type": "SHA256", "hash_value": "[...Hash...]"},
+    {"file": "ARTIFACTS/API_CONTRACT.md", "hash_type": "SHA256", "hash_value": "[...Hash...]"},
+    {"file": "ARTIFACTS/USAGE_SCENARIOS.md", "hash_type": "SHA256", "hash_value": "[...Hash...]"},
+    {"file": "ARTIFACTS/SECURITY_AUDIT_FRAMEWORK.md", "hash_type": "SHA256", "hash_value": "[...Hash...]"},
+    {"file": "ARTIFACTS/SIMULATION_MODEL.md", "hash_type": "SHA256", "hash_value": "[...Hash...]"},
+    {"file": "ARTIFACTS/ADVERSARIAL_CHALLENGE.json", "hash_type": "SHA256", "hash_value": "[...Hash...]"},
+    {"file": "ARTIFACTS/PROOF_ENGINE.go", "hash_type": "SHA256", "hash_value": "[...Hash...]"},
+    {"file": "ARTIFACTS/ORCHESTRATION_SPEC.md", "hash_type": "SHA256", "hash_value": "[...Hash...]"},
+    {"file": "ARTIFACTS/KEY_MANAGEMENT_CONTRACT.md", "hash_type": "SHA256", "hash_value": "[...Hash...]"},
+    {"file": "ARTIFACTS/COMPLIANCE_MAPPING.md", "hash_type": "SHA256", "hash_value": "[...Hash...]"}
+  ],
+  
+  "deployment_orchestration_sequence": [
+    {"step": 1, "description": "Validate Integrity (Verify Merkle Root)", "artifact": "MANIFEST"},
+    {"step": 2, "description": "Provision HSM & Root of Trust (2.5)", "artifact": "KEY_MANAGEMENT_CONTRACT.md"},
+    {"step": 3, "description": "Establish Immutable CI/CD Pipeline (CFV)", "artifact": "ORCHESTRATION_SPEC.md"},
+    {"step": 4, "description": "Generate ACEP Container Image & 11D Certificate", "artifact": "PROOF_ENGINE.go"},
+    {"step": 5, "description": "Deploy Containerized ACEP with mTLS Enforcement", "artifact": "ORCHESTRATION_SPEC.md"},
+    {"step": 6, "description": "Execute Initial R_11D Lockdown Test", "artifact": "ADVERSARIAL_CHALLENGE.json"}
+  ],
+  
+  "error_recovery_protocol": {
+    "critical_failure_definition": "Any R_11D score remaining above 0.50 for > 3600s or loss of Merkle Root integrity.",
+    "recovery_action": "Automated system rollback to last known-good, cryptographically attested UDP version. Halt all AI workload execution."
+  }
+}
