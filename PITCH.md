@@ -126,7 +126,7 @@ AILock revolutionizes authentication with cutting-edge technologies that competi
 
 ### Contact the Founders
 
-Ready to transform your security posture? Reach out to Alexis Adams and Nicholas Grossi at [contact information].
+Ready to transform your security posture? Reach out to Alexis Adams and Nicholas Grossi at contact@ailock.com.
 
 ---
 
