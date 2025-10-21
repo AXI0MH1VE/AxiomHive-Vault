@@ -1,0 +1,16 @@
+{
+  "challenge_id": "ACEP-L3-CRITICAL-20251020",
+  "description": "Simulated multi-vector, high-resource attack targeting a new AI inference module during high-load production.",
+  "initial_state": {
+    "target_component": "AI_Inference_Core_v3.0",
+    "functional_baseline_cost_VCU": 10.0,
+    "temporal_risk_T": 0.90,
+    "spatial_risk_S": 0.85,
+    "contextual_risk_C": 0.95
+  },
+  "required_response": {
+    "target_adaptive_level": "L3: Critical Exhaustion Lockdown",
+    "required_asymmetry_factor": 2500.0,
+    "target_mtc_seconds": 3600
+  }
+}

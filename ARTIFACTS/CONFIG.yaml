@@ -1,0 +1,33 @@
+# ARTIFACTS/CONFIG.yaml
+
+protocol_version: "1.1.0-AsymmetricExhaustion"
+deployment_id: "ADAMS-SEC-ALPHA-20251020"
+
+# --- CORE ASYMMETRY CONFIGURATION ---
+exhaustion_engine:
+  # Resource multiplier for security vs. functional validation. Recommended: 1000.0x
+  asymmetry_factor: 1000.0 
+  # Absolute computational budget (e.g., in vCPU-hours/week)
+  budget_cap_vCPU_hours: 8000 
+  
+# --- 11D CONTEXT ENFORCEMENT ---
+enforcement_policy:
+  temporal:
+    max_drift_tolerance_ms: 100 # Tight control on time-of-check-to-time-of-use (TOCTTOU)
+  spatial:
+    required_data_residency_region: "US-EAST-ALPHA"
+    max_network_segmentation_depth: 7 # Microsegmentation layers
+  contextual:
+    criticality_threshold_for_remediation: 0.7 # Minimum score for immediate, forced remediation
+
+# --- FORMAL VERIFICATION CONFIG ---
+formal_tools:
+  tla_plus_modules: ["CoreAuthLogic", "ConsensusAlgorithm"]
+  klee_coverage_target: "100%"
+
+# --- USER-CENTRIC LOCKDOWN CONFIG ---
+mfa:
+  default_method: "biometric_or_hardware"
+pam:
+  session_recording_enabled: true
+  justification_required_level: "HIGH" # For privileged elevation
