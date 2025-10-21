@@ -67,7 +67,7 @@ func CalculateACEPCost(baselineCost, asymmetryFactor float64) float64 {
 
 func main() {
 	// 1. LOAD ADVERSARIAL CHALLENGE
-	challengePath := "ADVERSARIAL_CHALLENGE.json"
+	challengePath := "ARTIFACTS/ADVERSARIAL_CHALLENGE.json"
 	data, err := os.ReadFile(challengePath)
 	if err != nil {
 		fmt.Printf("FATAL ERROR: Failed to load challenge file: %v\n", err)
