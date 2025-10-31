@@ -1,0 +1,41 @@
+# AILock Prometheus Metrics Configuration - Phase 2
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'ailock-prod'
+    replica: '1'
+
+scrape_configs:
+  - job_name: 'ailock-api'
+    static_configs:
+      - targets: ['ailock-api:8080']
+        labels:
+          service: 'ailock-api'
+          environment: 'production'
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'ailock-metrics'
+    static_configs:
+      - targets: ['ailock-api:9090']
+        labels:
+          service: 'ailock-metrics'
+          environment: 'production'
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+          environment: 'production'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+rule_files:
+  # - "alert_rules.yml"
