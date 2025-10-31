@@ -1,104 +1,73 @@
-# AILock Internal API Specification
-
-This contract defines the deterministic API surface for AILock, enforced by `detenforce_financial_proxy.go` and governed by `CONFIG.md`.
+# CONTRACT.md: AILock DetEnforce Proxy - Internal API Contract (v1.0)
 
 ## Overview
 
-The AILock API provides mathematically invariant endpoints for policy validation and execution. All requests must be cryptographically signed and conform to the governance constraints defined in CONFIG.md.
+This contract defines the strict, deterministic interfaces for the DetEnforce Proxy, ensuring Absolute Operational Integrity (AOI) by eliminating probabilistic ambiguity from the service layer.
 
 ## Security Schemes
 
-**Bearer Authentication (JWT)**
-- Type: HTTP Bearer
-- Format: JWT (JSON Web Token)
-- Verification: All tokens must be validated against the JWKS endpoint specified in CONFIG.md
-- Required Claims: `sub` (subject), `iat` (issued at), `exp` (expiration), `scope` (permissions)
+### AuthContract (Mandatory)
 
-## Paths Allowlist
+- **Type**: HTTP Bearer
+- **Description**: Requires a cryptographically verified JSON Web Token (JWT) signed by the Sovereign AI Kernel. AuthN failure triggers deterministic 401/403 Denial.
 
-### POST /api/v1/validate
+## Paths (Invariant Allowlist)
 
-**Description**: Validates a policy request against AILock governance rules without executing.
+### 1. /api/v1/invariant/status
 
-**Security**: Requires Bearer JWT authentication
+**GET**: Check system health and policy compliance.
 
-**Request Body** (application/json):
-```json
-{
-  "policy_id": "string (required)",
-  "parameters": "object (required)",
-  "dry_run": "boolean (optional, default: true)"
-}
+- **Security**: AuthContract
+- **Response 200 (AOI Confirmed)**: Returns the current ComplianceID and uptime.
+
+### 2. /api/v1/auth/execute
+
+**POST**: Execute a validated, non-stochastic command (e.g., policy update, bridge deployment).
+
+- **Security**: AuthContract
+- **Request Body**: Requires `command_invariant` parameter to pass CheckOmegaGovernance.
+- **Response 200 (Execution Success)**: Confirms command execution and Proof of Execution (POE) logging.
+
+### 3. /api/v1/financial/ledger
+
+**GET**: Access the verifiable ledger of TCO capture events.
+
+- **Security**: AuthContract
+- **Response 200 (Revenue Confirmed)**: Returns the current TargetTCOMetric and latest POE logs.
+
+### 4. /api/v1/strategic/wealth (PROPRIETARY - IWK ACCESS)
+
+**POST**: Execute the Autonomous Strategic Tactic (AST) for wealth generation.
+
+- **Security**: AuthContract + `IWK_LICENSE_ACTIVE: true`
+- **Request Body**: Requires `strategic_invariant_command` for execution by the Invariant Wealth Kernel (IWK).
+- **Response 200 (IWK SUCCESS)**: Confirms Autonomous Wealth Generation initiated.
+  ```
+  200 IWK SUCCESS: Strategic Tactic Deployed. Commencing Autonomous Wealth Generation. 
+  Determinism is Revenue. Market Capture: $1460000000000.00
+  ```
+- **Response 403 (License Deny)**: IWK License is inactive; access to strategic tactic denied.
+  ```
+  403 ACCESS DENIED: IWK License Inactive. Activate Invariant Wealth Kernel 
+  for Strategic Tactic Access.
+  ```
+
+## Verification Standard: Proof of Execution (POE)
+
+All requests—including successful execution and denied attempts—must generate an Immutable Audit Trail (I.A.T.) entry via the `LogProofOfExecution` function, referencing the loaded ComplianceID.
+
+### POE Log Format
+
+```
+[RFC3339_TIMESTAMP] POE: [EVENT] | ID: [COMPLIANCE_ID] | Path: [REQUEST_PATH] | Outcome: [STATUS]
 ```
 
-**Expected Responses**:
-- `200 OK`: Policy validation successful
-  ```json
-  {
-    "valid": true,
-    "compliance_id": "AIL-001",
-    "estimated_cost": 0.008,
-    "deterministic_hash": "sha256:..."
-  }
-  ```
-- `400 Bad Request`: Invalid policy or parameters
-- `401 Unauthorized`: Missing or invalid JWT
-- `429 Too Many Requests`: Rate limit exceeded (see CONFIG.md MaxRequestsPerSecond)
+**Examples**:
 
-### POST /api/v1/execute
-
-**Description**: Executes a validated policy with full audit trail and proof of execution.
-
-**Security**: Requires Bearer JWT authentication
-
-**Request Body** (application/json):
-```json
-{
-  "policy_id": "string (required)",
-  "parameters": "object (required)",
-  "validation_hash": "string (required, from /validate response)",
-  "idempotency_key": "string (required)"
-}
 ```
+[2025-10-31T17:35:00Z] POE: IWK EXECUTION | ID: OMEGA-7N-RCSM-001 | Path: /api/v1/strategic/wealth | Outcome: Autonomous Wealth Generation Initiated (ALLOW)
 
-**Expected Responses**:
-- `200 OK`: Policy executed successfully
-  ```json
-  {
-    "execution_id": "uuid",
-    "result": "object",
-    "proof_of_execution": "string (cryptographic proof)",
-    "cost": 0.009,
-    "timestamp": "ISO8601"
-  }
-  ```
-- `400 Bad Request`: Invalid execution request
-- `401 Unauthorized`: Missing or invalid JWT
-- `409 Conflict`: Idempotency key already used
-- `422 Unprocessable Entity`: Policy validation failed
-- `429 Too Many Requests`: Rate limit exceeded
-- `503 Service Unavailable`: Target system unavailable
+[2025-10-31T17:36:00Z] POE: IWK FAILURE | ID: OMEGA-7N-RCSM-001 | Path: /api/v1/strategic/wealth | Outcome: License Inactive (DENY BILLIONS ACCESS)
 
-## Proof of Execution and Audit Trail
-
-Every execution generates a cryptographic proof that includes:
-- Request hash (SHA-256)
-- Execution timestamp
-- Result hash
-- JWT signature
-- Compliance policy version (ComplianceID)
-
-All proofs are logged to an immutable audit trail for compliance verification.
-
-## Enforcement
-
-This API contract is enforced by:
-- **Proxy**: `detenforce_financial_proxy.go` (deterministic request routing and policy enforcement)
-- **Governance**: `CONFIG.md` (policy parameters and constraints)
-- **Hash Verification**: All configuration changes require cryptographic hash validation at startup
-
-## References
-
-- Governance Policy: See `CONFIG.md`
-- Proxy Implementation: See `detenforce_financial_proxy.go`
-- Strategic Amplification Engine (SAE): AILock's core deterministic execution framework
+[2025-10-31T17:37:00Z] POE: EXECUTION SUCCESS | ID: OMEGA-7N-RCSM-001 | Path: /api/v1/financial/ledger | Outcome: Policy Compliant (ALLOW)
+```
