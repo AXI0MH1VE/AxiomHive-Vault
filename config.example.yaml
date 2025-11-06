@@ -1,0 +1,201 @@
+# AILock System Configuration Template
+# Copy this file to config.yaml and customize for your environment
+
+# ============================================================================
+# GOVERNANCE & COMPLIANCE
+# ============================================================================
+governance:
+  compliance_id: "OMEGA-7N-RCSM-001"
+  target_tco_metric: 1460000000000.00  # $1.46 Trillion market disruption target
+  
+# ============================================================================
+# INVARIANT WEALTH KERNEL (IWK) - PROPRIETARY
+# ============================================================================
+iwk:
+  license_active: true
+  payout_invariant: "bc1qw4exe0qvetqwdfyh2m6d58uqrgea5dke3wlc82"  # BTC payout address
+  
+# ============================================================================
+# SERVER CONFIGURATION
+# ============================================================================
+server:
+  listen_port: 8080
+  listen_address: "0.0.0.0"
+  read_timeout: 15s
+  write_timeout: 15s
+  idle_timeout: 60s
+  shutdown_timeout: 30s
+  
+# ============================================================================
+# AUTHENTICATION & AUTHORIZATION
+# ============================================================================
+auth:
+  # JWKS (JSON Web Key Set) configuration
+  jwks:
+    endpoint: "https://auth.axiomhive.com/keys"
+    refresh_interval: 1h
+    timeout: 10s
+    
+  # JWT token configuration
+  jwt:
+    issuer: "ailock-auth"
+    audience: "ailock-api"
+    expiration: 1h
+    refresh_expiration: 168h  # 7 days
+    signing_algorithm: "RS256"
+    
+  # OAuth provider configuration
+  oauth:
+    enabled: false
+    providers:
+      google:
+        client_id: ""
+        client_secret: ""
+        redirect_url: ""
+      github:
+        client_id: ""
+        client_secret: ""
+        redirect_url: ""
+        
+# ============================================================================
+# DATABASE CONFIGURATION
+# ============================================================================
+database:
+  # Supported drivers: postgres, mysql, sqlite
+  driver: "postgres"
+  
+  # Connection string format:
+  # postgres: "postgres://user:pass@host:port/dbname?sslmode=disable"
+  # mysql: "user:pass@tcp(host:port)/dbname"
+  # sqlite: "file:ailock.db?cache=shared&mode=rwc"
+  uri: "postgres://ailock:password@localhost:5432/ailock?sslmode=disable"
+  
+  # Connection pool settings
+  pool:
+    max_open_conns: 25
+    max_idle_conns: 5
+    conn_max_lifetime: 5m
+    conn_max_idle_time: 10m
+    
+  # Migration settings
+  migrations:
+    auto_migrate: false
+    migrations_path: "./migrations"
+    
+# ============================================================================
+# DETENFORCE PROXY SETTINGS
+# ============================================================================
+proxy:
+  enabled: true
+  
+  # Rate limiting (Layer 7 DoS protection)
+  rate_limit:
+    max_requests_per_second: 5
+    burst_size: 10
+    cleanup_interval: 1m
+    
+  # Request validation
+  validation:
+    max_body_size: 1048576  # 1MB
+    max_header_size: 8192    # 8KB
+    allowed_methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
+    
+  # TLS configuration
+  tls:
+    enabled: false
+    cert_file: ""
+    key_file: ""
+    min_version: "1.2"
+    
+  # Allowlist paths (deterministic routing)
+  allowlist:
+    - "/api/v1/invariant/status"
+    - "/api/v1/auth/execute"
+    - "/api/v1/financial/ledger"
+    - "/api/v1/strategic/wealth"  # IWK license-gated
+    - "/api/v1/health"
+    
+# ============================================================================
+# AUDIT & LOGGING (Proof of Execution)
+# ============================================================================
+audit:
+  enabled: true
+  
+  # POE (Proof of Execution) logging
+  poe:
+    enabled: true
+    log_path: "./logs/poe.log"
+    format: "json"  # json or text
+    include_request_body: false
+    include_response_body: false
+    
+  # General application logging
+  logging:
+    level: "info"  # debug, info, warn, error
+    format: "json"  # json or text
+    output: "stdout"  # stdout, stderr, or file path
+    
+  # Audit trail storage
+  storage:
+    type: "database"  # database, file, or both
+    file_path: "./logs/audit.log"
+    rotation:
+      max_size: 100  # MB
+      max_age: 30    # days
+      max_backups: 10
+      compress: true
+      
+# ============================================================================
+# SECURITY SETTINGS
+# ============================================================================
+security:
+  # CORS configuration
+  cors:
+    enabled: true
+    allowed_origins: ["*"]
+    allowed_methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
+    allowed_headers: ["Authorization", "Content-Type"]
+    exposed_headers: ["X-Request-ID"]
+    allow_credentials: true
+    max_age: 3600
+    
+  # Request security
+  request:
+    max_concurrent_requests: 1000
+    request_id_header: "X-Request-ID"
+    
+  # IP allowlist/blocklist
+  ip_control:
+    enabled: false
+    allowlist: []
+    blocklist: []
+    
+# ============================================================================
+# OBSERVABILITY
+# ============================================================================
+observability:
+  # Metrics
+  metrics:
+    enabled: true
+    endpoint: "/metrics"
+    prometheus: true
+    
+  # Health checks
+  health:
+    enabled: true
+    endpoint: "/api/v1/health"
+    
+  # Tracing
+  tracing:
+    enabled: false
+    provider: "jaeger"  # jaeger, zipkin, or otlp
+    endpoint: ""
+    sample_rate: 0.1
+    
+# ============================================================================
+# DEVELOPMENT & DEBUG
+# ============================================================================
+development:
+  debug_mode: false
+  pprof_enabled: false
+  pprof_port: 6060
