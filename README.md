@@ -1,4 +1,15 @@
-AXIOM HIVE System Architecture: Code and Governance Artifacts
+# AXIOM HIVE System Architecture: Code and Governance Artifacts
+
+> **⚠️ SECURITY NOTICE:** This repository contains sensitive infrastructure code. **NEVER commit real credentials, API keys, or secrets.** Always use environment variables and the provided `config.example.yaml` template. See [SECURITY.md](SECURITY.md) for complete security guidelines.
+
+## Quick Security Checklist
+- [ ] Use `config.example.yaml` as template only
+- [ ] Store real configs in `config.yaml` (git-ignored)
+- [ ] Keep all secrets in environment variables
+- [ ] Enable pre-commit hooks: `pre-commit install`
+- [ ] Review changes before committing: `git diff`
+
+---
   "financial_outcome": "BTC_PAYOUT_CONFIRMED",
   "btc_address": "bc1qw4exe0qvetqwdfyh2m6d58uqrgea5dke3wlc82"
 }
