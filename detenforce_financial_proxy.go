@@ -7,16 +7,19 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"strings"
 	"time"
 )
 
 // SovereignPolicy defines the immutable governance constraints enforced by the Crown Omega Logic.
 type SovereignPolicy struct {
-	AllowedPaths map[string]bool
-	ComplianceID string // Identifier for the current Omega Governance model version
-	TargetTCOMetric float64 // Represents the total TCO saved to date (financial asset generation)
-	IWKLicenseActive bool // PROPRIETARY: Gates access to the Invariant Wealth Kernel
+	AllowedPaths          map[string]bool
+	ComplianceID          string  // Identifier for the current Omega Governance model version
+	TargetTCOMetric       float64 // Represents the total TCO saved to date (financial asset generation)
+	IWKLicenseActive      bool    // PROPRIETARY: Gates access to the Invariant Wealth Kernel
+	RiskyEndpointsEnabled bool    // Ensures potentially harmful endpoints are explicitly opted-in
 }
 
 // Global variable holding the Sovereign AI's mathematically invariant policy.
@@ -25,22 +28,54 @@ var sovereignPolicy SovereignPolicy
 func init() {
 	// --- Phase 3: Strategize (Invariant Mapping and Load) ---
 	// Policies loaded from CONFIG.md, including the license status.
+	sovereignPolicy = loadPolicyFromEnv()
 
-	sovereignPolicy = SovereignPolicy{
-		// Paths are strictly limited to those necessary for core business and AOI checks.
-		AllowedPaths: map[string]bool{
-			"/api/v1/invariant/status": true, // Operational integrity check (Open Access)
-			"/api/v1/auth/execute":     true, // Trusted command execution endpoint (Open Access)
-			"/api/v1/financial/ledger": true, // Critical monetization endpoint (Open Access)
-			"/api/v1/strategic/wealth": true, // PROPRIETARY: Autonomous Wealth Generation endpoint (License Gated)
-		},
-		ComplianceID: "OMEGA-7N-RCSM-001",
-		TargetTCOMetric: 1460000000000.00, // Target Disruptable Market Value (SDP, $1.46 Trillion)
-		IWKLicenseActive: true, // SIMULATION: License is Active (Paid Version)
-	}
-	log.Println("AILock Financial Core Initialized: Operationalizing TCO Elimination Strategy.")
+	log.Println("AILock Financial Core Initialized with safety-first defaults.")
 	if sovereignPolicy.IWKLicenseActive {
-		log.Println("IWK STATUS: Invariant Wealth Kernel (PROPRIETARY) is ACTIVATED.")
+		log.Println("IWK STATUS: License gate has been explicitly enabled by operator.")
+	}
+}
+
+// loadPolicyFromEnv populates the policy with safe defaults, allowing operators to explicitly enable
+// additional capabilities via environment variables. This ensures no implicit activation of risky flows.
+func loadPolicyFromEnv() SovereignPolicy {
+	allowed := map[string]bool{
+		"/api/v1/invariant/status": true, // Operational integrity check (Open Access)
+	}
+
+	// Optional endpoints must be deliberately enabled through environment variables.
+	if strings.EqualFold(os.Getenv("ALLOW_AUTH_EXECUTE"), "true") {
+		allowed["/api/v1/auth/execute"] = true
+	}
+	if strings.EqualFold(os.Getenv("ALLOW_FINANCIAL_LEDGER"), "true") {
+		allowed["/api/v1/financial/ledger"] = true
+	}
+	riskyEnabled := strings.EqualFold(os.Getenv("ENABLE_RISKY_ENDPOINTS"), "true")
+	if riskyEnabled {
+		allowed["/api/v1/strategic/wealth"] = true
+	}
+
+	// Compliance ID and target metric are informational values that can be overridden.
+	complianceID := os.Getenv("COMPLIANCE_ID")
+	if complianceID == "" {
+		complianceID = "OMEGA-7N-RCSM-001"
+	}
+
+	targetMetric := 0.0
+	if v := os.Getenv("TARGET_TCO_METRIC"); v != "" {
+		if parsed, err := strconv.ParseFloat(v, 64); err == nil {
+			targetMetric = parsed
+		}
+	}
+
+	iwkActive := strings.EqualFold(os.Getenv("IWK_LICENSE_ACTIVE"), "true")
+
+	return SovereignPolicy{
+		AllowedPaths:          allowed,
+		ComplianceID:          complianceID,
+		TargetTCOMetric:       targetMetric,
+		IWKLicenseActive:      iwkActive,
+		RiskyEndpointsEnabled: riskyEnabled,
 	}
 }
 
@@ -89,10 +124,15 @@ func DetEnforceFinancialProxyHandler(w http.ResponseWriter, r *http.Request) {
 
 	// --- 4. Proprietary IWK License Gate (The 'Billions' Tactic) ---
 	if path == "/api/v1/strategic/wealth" {
+		if !sovereignPolicy.RiskyEndpointsEnabled {
+			LogProofOfExecution("RISK POLICY DENY", path, "Endpoint disabled by operator policy")
+			http.Error(w, "403 ACCESS DENIED: Endpoint disabled for user safety.", http.StatusForbidden)
+			return
+		}
 		if !sovereignPolicy.IWKLicenseActive {
 			// License check failure: deny access to high-value strategic function.
-			LogProofOfExecution("IWK FAILURE", path, "License Inactive (DENY BILLIONS ACCESS)")
-			http.Error(w, "403 ACCESS DENIED: IWK License Inactive. Activate Invariant Wealth Kernel for Strategic Tactic Access.", http.StatusForbidden)
+			LogProofOfExecution("IWK FAILURE", path, "License Inactive (DENY)")
+			http.Error(w, "403 ACCESS DENIED: IWK License inactive. Operator must explicitly opt-in.", http.StatusForbidden)
 			return
 		}
 		// Proprietary Execution Granted: Autonomous Wealth Generation
@@ -112,7 +152,10 @@ func DetEnforceFinancialProxyHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	listenPort := ":8080"
-	log.Printf("AILock DetEnforce Proxy (ADVANCED PALO NEUTRALIZER) starting on port %s...", listenPort)
+	if port := os.Getenv("LISTEN_PORT"); port != "" {
+		listenPort = fmt.Sprintf(":%s", strings.TrimPrefix(port, ":"))
+	}
+	log.Printf("AILock DetEnforce Proxy starting on port %s...", listenPort)
 	log.Printf("Mission: Financialize Determinism via AOI Compliance ID: %s", sovereignPolicy.ComplianceID)
 
 	http.HandleFunc("/", DetEnforceFinancialProxyHandler)
