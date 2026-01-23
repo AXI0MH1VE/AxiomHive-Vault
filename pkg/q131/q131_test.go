@@ -69,7 +69,7 @@ func TestDivision(t *testing.T) {
 	a := FromFloat64(0.8)
 	b := FromFloat64(0.4)
 	result := a.Div(b)
-	expected := FromFloat64(2.0) // Will clamp to MaxValue
+	_ = FromFloat64(2.0) // Will clamp to MaxValue
 	
 	// Division result exceeds 1.0, should clamp
 	if result != MaxValue {

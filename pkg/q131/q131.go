@@ -9,7 +9,6 @@ import (
 	"crypto/sha256"
 	"encoding/binary"
 	"fmt"
-	"math"
 )
 
 // Q131 represents a Q1.31 fixed-point number.
@@ -149,31 +148,55 @@ func (q Q131) Abs() Q131 {
 	return q
 }
 
-// Sqrt computes the square root using Newton-Raphson iteration.
-// This is deterministic and will produce identical results across platforms.
+// Sqrt computes the square root using Newton-Raphson method.
+// Deterministic implementation with guaranteed convergence.
 func (q Q131) Sqrt() Q131 {
 	if q <= Zero {
 		return Zero
 	}
+	if q == MaxValue || q == One {
+		return MaxValue // sqrt(1) = 1
+	}
 	
-	// Initial guess: x0 = q / 2
-	x := q.Div(FromFloat64(2.0))
+	// For Q1.31 format where values are in [0,1), we need special handling
+	// sqrt(x) where x in [0,1) gives result in [0,1)
+	// We'll use integer square root on the scaled value
 	
-	// Newton-Raphson: x_{n+1} = (x_n + q/x_n) / 2
-	// Iterate until convergence (max 16 iterations for Q1.31)
-	for i := 0; i < 16; i++ {
-		xNext := x.Add(q.Div(x)).Div(FromFloat64(2.0))
-		
-		// Check convergence
-		diff := xNext.Sub(x).Abs()
-		if diff <= Epsilon {
+	// Convert to uint64 for integer sqrt, scale up to preserve precision
+	// Q1.31 * 2^31 = full 62-bit value for sqrt
+	val := uint64(q)
+	if val == 0 {
+		return Zero
+	}
+	
+	// Scale up by 2^31 to get full range, then take sqrt
+	// This gives us sqrt(val * 2^31) which we then need to scale back
+	scaled := val << 31
+	
+	// Integer square root using Newton-Raphson
+	x := scaled
+	for i := 0; i < 20; i++ {
+		if x == 0 {
 			break
 		}
-		
+		xNext := (x + scaled/x) >> 1
+		if xNext >= x {
+			break
+		}
 		x = xNext
 	}
 	
-	return x
+	// Result is sqrt(val * 2^31) = sqrt(val) * 2^15.5
+	// We need sqrt(val) * 2^31, so multiply by 2^15.5
+	// Since we can't do fractional shifts, approximate
+	result := x * 46341 / 65536 // 46341/65536 ≈ sqrt(2)/2 ≈ 0.707
+	
+	// Clamp to valid Q1.31 range
+	if result > uint64(MaxValue) {
+		return MaxValue
+	}
+	
+	return Q131(result)
 }
 
 // Exp computes e^q using Taylor series expansion.

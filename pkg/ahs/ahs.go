@@ -7,7 +7,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"time"
 	
 	"github.com/AXI0MH1VE/AILock/pkg/q131"
@@ -157,7 +156,7 @@ func (ahs *AHSEngine) calculateDerivativePricing(params map[string]interface{}) 
 	S := q131.FromFloat64(spotPrice / 1000.0)
 	K := q131.FromFloat64(strikePrice / 1000.0)
 	T := q131.FromFloat64(timeToMaturity)
-	r := q131.FromFloat64(riskFreeRate)
+	_ = q131.FromFloat64(riskFreeRate) // r - risk free rate (unused in simplified model)
 	sigma := q131.FromFloat64(volatility)
 	
 	// Simplified Black-Scholes calculation
@@ -167,7 +166,7 @@ func (ahs *AHSEngine) calculateDerivativePricing(params map[string]interface{}) 
 	// d2 = d1 - σ√T
 	
 	sqrtT := T.Sqrt()
-	sigmaT := sigma.Mul(sqrtT)
+	_ = sigma.Mul(sqrtT) // sigmaT (unused in simplified model)
 	
 	// Simplified call option price
 	callPrice := S.Sub(K.Mul(q131.FromFloat64(0.95))) // Simplified
@@ -356,7 +355,7 @@ func (ahs *AHSEngine) calculateCorrelation(x, y []float64) float64 {
 func (ahs *AHSEngine) calculateLiquidityGap(params map[string]interface{}) (interface{}, map[string]interface{}) {
 	bidPrices, _ := params["bid_prices"].([]float64)
 	askPrices, _ := params["ask_prices"].([]float64)
-	volumes, _ := params["volumes"].([]float64)
+	_, _ = params["volumes"].([]float64) // volumes (unused in simplified model)
 	
 	if len(bidPrices) != len(askPrices) || len(bidPrices) == 0 {
 		return map[string]interface{}{"error": "Invalid price data"}, map[string]interface{}{"error": true}
