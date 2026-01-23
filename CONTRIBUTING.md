@@ -60,7 +60,7 @@ There are many ways to contribute to AILock:
 
 We follow a structured pull request workflow to ensure code quality and security. For detailed information on our complete PR process, including review requirements, merge strategies, and audit procedures, please see:
 
-**📋 [Pull Request Handling Guide](docs/PULL_REQUEST_HANDLING.md)**
+** [Pull Request Handling Guide](docs/PULL_REQUEST_HANDLING.md)**
 
 This comprehensive guide covers:
 - Fork and feature branch workflow
@@ -93,30 +93,30 @@ This comprehensive guide covers:
 ### Getting Started
 
 1. **Clone your fork**:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/AILock.git
-   cd AILock
-   ```
+ ```bash
+ git clone https://github.com/YOUR_USERNAME/AILock.git
+ cd AILock
+ ```
 
 2. **Add upstream remote**:
-   ```bash
-   git remote add upstream https://github.com/AXI0MH1VE/AILock.git
-   ```
+ ```bash
+ git remote add upstream https://github.com/AXI0MH1VE/AILock.git
+ ```
 
 3. **Install dependencies**:
-   ```bash
-   go mod download
-   ```
+ ```bash
+ go mod download
+ ```
 
 4. **Run tests**:
-   ```bash
-   make test
-   ```
+ ```bash
+ make test
+ ```
 
 5. **Build the project**:
-   ```bash
-   make build
-   ```
+ ```bash
+ make build
+ ```
 
 ## Coding Standards
 
@@ -223,4 +223,4 @@ By contributing to AILock, you agree that your contributions will be licensed un
 
 ---
 
-Thank you for contributing to AILock! 🚀
+Thank you for contributing to AILock! 

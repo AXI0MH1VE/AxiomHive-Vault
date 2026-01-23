@@ -7,68 +7,68 @@ Production-grade, operator-proof AILock repo blueprint — zero-mystery, clone-a
 ```
 AILock/
 ├─ cmd/
-│  ├─ ailock-api/            # API service entrypoint (authN/authZ endpoints)
-│  └─ detenforce-proxy/      # L7 proxy entrypoint (policy, rate limit, TLS)
-├─ internal/                 # Non-public Go packages
-│  ├─ auth/                  # JWT/OIDC, JWKS, claim validation, clock-skew, kid rotation
-│  ├─ rbac/                  # Roles, permissions, policy engine, matchers
-│  ├─ proxy/                 # Reverse proxy core: routing, rewrite, timeouts, retries
-│  ├─ ratelimit/             # Token bucket/leaky bucket, identity- and IP-scoped
-│  ├─ validation/            # Request size/header limits, content-type checks
-│  ├─ tls/                   # TLS config, ACME (http-01/tls-alpn-01), cert storage
-│  ├─ config/                # Config loader (YAML+env), schema validation
-│  ├─ logging/               # Structured logs (zap/zerolog), request-id middleware
-│  ├─ tracing/               # OTEL hooks (optional), metrics via Prometheus
-│  ├─ health/                # Liveness/readiness endpoints
-│  ├─ upstream/              # Balancer, health checks, circuit breaker
-│  ├─ audit/                 # Decision logs: who/what/why/latency
-│  └─ security/              # Safe defaults, header normalization, SSRF guards
-├─ pkg/                      # Optional public packages (if you want SDK surface)
-│  └─ client/                # Minimal Go client for testing (optional)
-├─ api/                      # API definitions (OpenAPI/Swagger), JSON schemas
-│  └─ openapi.yaml
+│ ├─ ailock-api/ # API service entrypoint (authN/authZ endpoints)
+│ └─ detenforce-proxy/ # L7 proxy entrypoint (policy, rate limit, TLS)
+├─ internal/ # Non-public Go packages
+│ ├─ auth/ # JWT/OIDC, JWKS, claim validation, clock-skew, kid rotation
+│ ├─ rbac/ # Roles, permissions, policy engine, matchers
+│ ├─ proxy/ # Reverse proxy core: routing, rewrite, timeouts, retries
+│ ├─ ratelimit/ # Token bucket/leaky bucket, identity- and IP-scoped
+│ ├─ validation/ # Request size/header limits, content-type checks
+│ ├─ tls/ # TLS config, ACME (http-01/tls-alpn-01), cert storage
+│ ├─ config/ # Config loader (YAML+env), schema validation
+│ ├─ logging/ # Structured logs (zap/zerolog), request-id middleware
+│ ├─ tracing/ # OTEL hooks (optional), metrics via Prometheus
+│ ├─ health/ # Liveness/readiness endpoints
+│ ├─ upstream/ # Balancer, health checks, circuit breaker
+│ ├─ audit/ # Decision logs: who/what/why/latency
+│ └─ security/ # Safe defaults, header normalization, SSRF guards
+├─ pkg/ # Optional public packages (if you want SDK surface)
+│ └─ client/ # Minimal Go client for testing (optional)
+├─ api/ # API definitions (OpenAPI/Swagger), JSON schemas
+│ └─ openapi.yaml
 ├─ deployments/
-│  ├─ docker/                # Dockerfile(s), docker-compose demo
-│  ├─ k8s/                   # Manifests: Deployment, Service, Ingress, ConfigMap, Secret
-│  └─ helm/                  # (Optional) Helm chart for production installs
+│ ├─ docker/ # Dockerfile(s), docker-compose demo
+│ ├─ k8s/ # Manifests: Deployment, Service, Ingress, ConfigMap, Secret
+│ └─ helm/ # (Optional) Helm chart for production installs
 ├─ docs/
-│  ├─ ARCHITECTURE.md        # Component diagram, data flows, trust boundaries
-│  ├─ QUICKSTART.md          # 60s path to first success (API+Proxy)
-│  ├─ GETTING_STARTED.md     # Step-by-step (Docker, Compose, K8s, bare-metal)
-│  ├─ CONFIGURATION.md       # Full config schema with sane defaults
-│  ├─ POLICY_EXAMPLES.md     # RBAC/policy examples (user, service, admin)
-│  ├─ THREAT_MODEL.md        # STRIDE-style model, mitigations, residual risk
-│  ├─ SECURITY.md            # Report policy, supported versions, contact
-│  ├─ PERFORMANCE.md         # Bench methodology + target latencies
-│  ├─ OPERATIONS.md          # Logging, metrics, rotation, backups, cert mgmt
-│  ├─ ROADMAP.md             # Near-term features, deprecations policy
-│  └─ ADRs/                  # Architecture Decision Records
+│ ├─ ARCHITECTURE.md # Component diagram, data flows, trust boundaries
+│ ├─ QUICKSTART.md # 60s path to first success (API+Proxy)
+│ ├─ GETTING_STARTED.md # Step-by-step (Docker, Compose, K8s, bare-metal)
+│ ├─ CONFIGURATION.md # Full config schema with sane defaults
+│ ├─ POLICY_EXAMPLES.md # RBAC/policy examples (user, service, admin)
+│ ├─ THREAT_MODEL.md # STRIDE-style model, mitigations, residual risk
+│ ├─ SECURITY.md # Report policy, supported versions, contact
+│ ├─ PERFORMANCE.md # Bench methodology + target latencies
+│ ├─ OPERATIONS.md # Logging, metrics, rotation, backups, cert mgmt
+│ ├─ ROADMAP.md # Near-term features, deprecations policy
+│ └─ ADRs/ # Architecture Decision Records
 ├─ examples/
-│  ├─ configs/               # Minimal + production-like configs (HS256, RS256+JWKS)
-│  ├─ jwks/                  # Sample keys (dev-only), JWKS static files
-│  ├─ upstreams/             # Tiny echo server for offline demos
-│  └─ clients/               # curl/hey/vegeta examples, Postman collection
+│ ├─ configs/ # Minimal + production-like configs (HS256, RS256+JWKS)
+│ ├─ jwks/ # Sample keys (dev-only), JWKS static files
+│ ├─ upstreams/ # Tiny echo server for offline demos
+│ └─ clients/ # curl/hey/vegeta examples, Postman collection
 ├─ test/
-│  ├─ unit/                  # Go unit tests, fuzz tests (Go fuzz)
-│  ├─ integration/           # Start services, hit routes, assert decisions
-│  └─ e2e/                   # Compose/kind-based end-to-end (auth+proxy+upstream)
+│ ├─ unit/ # Go unit tests, fuzz tests (Go fuzz)
+│ ├─ integration/ # Start services, hit routes, assert decisions
+│ └─ e2e/ # Compose/kind-based end-to-end (auth+proxy+upstream)
 ├─ tools/
-│  ├─ jwt_minter.go          # HS256 (dev); RS256 variant + JWKS publisher
-│  ├─ jwksgen.sh             # Generate RS256/ES256 keys + JWKS
-│  └─ devcert.sh             # mkcert/step-ca script for local TLS
+│ ├─ jwt_minter.go # HS256 (dev); RS256 variant + JWKS publisher
+│ ├─ jwksgen.sh # Generate RS256/ES256 keys + JWKS
+│ └─ devcert.sh # mkcert/step-ca script for local TLS
 ├─ scripts/
-│  ├─ smoke.sh               # 200→429 limit, 413 body, 431 headers
-│  ├─ bench.sh               # 'hey' 10s p50/p95/p99 smoke
-│  └─ release.sh             # Tag, build, SBOM, sign, create GH Release
+│ ├─ smoke.sh # 200→429 limit, 413 body, 431 headers
+│ ├─ bench.sh # 'hey' 10s p50/p95/p99 smoke
+│ └─ release.sh # Tag, build, SBOM, sign, create GH Release
 ├─ .github/
-│  └─ workflows/
-│     ├─ ci.yml              # build+test+lint
-│     ├─ security.yml        # govulncheck, staticcheck, gosec, CodeQL
-│     ├─ container-scan.yml  # Trivy image scan + SBOM (Syft)
-│     ├─ provenance.yml      # SLSA provenance/cosign attest
-│     └─ release.yml         # versioned releases, checksums, cosign signatures
-├─ ARTIFACTS/                # Ship reproducible demo config
-│  └─ DETENFORCE_PROXY_CORE.yaml
+│ └─ workflows/
+│ ├─ ci.yml # build+test+lint
+│ ├─ security.yml # govulncheck, staticcheck, gosec, CodeQL
+│ ├─ container-scan.yml # Trivy image scan + SBOM (Syft)
+│ ├─ provenance.yml # SLSA provenance/cosign attest
+│ └─ release.yml # versioned releases, checksums, cosign signatures
+├─ ARTIFACTS/ # Ship reproducible demo config
+│ └─ DETENFORCE_PROXY_CORE.yaml
 ├─ Dockerfile
 ├─ docker-compose.yaml
 ├─ Makefile
@@ -76,7 +76,7 @@ AILock/
 ├─ LICENSE (MIT)
 ├─ CONTRIBUTING.md
 ├─ CODE_OF_CONDUCT.md
-├─ GOVERNANCE.md             # (optional if you want community structure)
+├─ GOVERNANCE.md # (optional if you want community structure)
 └─ CHANGELOG.md
 ```
 
@@ -195,8 +195,8 @@ docker compose up -d
 bash scripts/smoke.sh
 
 # 3) AuthN: mint token and call protected route
-(cd tools && go run jwt_minter.go)  # prints token
-curl -H "Authorization: Bearer <TOKEN>" http://localhost:8080/api/secure/test  # expect 200 echo
+(cd tools && go run jwt_minter.go) # prints token
+curl -H "Authorization: Bearer <TOKEN>" http://localhost:8080/api/secure/test # expect 200 echo
 
 # 4) Bench (optional)
 export JWT_TOKEN=<TOKEN>

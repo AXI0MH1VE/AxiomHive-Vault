@@ -28,46 +28,46 @@
 
 **TODOs**:
 - [ ] **MFA (TOTP/Authenticator)**: Create `pkg/auth/mfa/` module
-  - [ ] Implement TOTP generation and validation
-  - [ ] Add QR code generation for authenticator setup
-  - [ ] Database schema for MFA secrets storage
-  - [ ] API endpoints: POST /api/v1/auth/mfa/setup, POST /api/v1/auth/mfa/verify
+ - [ ] Implement TOTP generation and validation
+ - [ ] Add QR code generation for authenticator setup
+ - [ ] Database schema for MFA secrets storage
+ - [ ] API endpoints: POST /api/v1/auth/mfa/setup, POST /api/v1/auth/mfa/verify
 
 - [ ] **OAuth Provider Logins**: Create `pkg/auth/oauth/` module
-  - [ ] Google OAuth2 integration
-  - [ ] GitHub OAuth2 integration
-  - [ ] Generic OAuth2 provider interface
-  - [ ] API endpoints: GET /api/v1/auth/oauth/{provider}, GET /api/v1/auth/oauth/{provider}/callback
+ - [ ] Google OAuth2 integration
+ - [ ] GitHub OAuth2 integration
+ - [ ] Generic OAuth2 provider interface
+ - [ ] API endpoints: GET /api/v1/auth/oauth/{provider}, GET /api/v1/auth/oauth/{provider}/callback
 
 - [ ] **WebAuthn/FIDO2**: Create `pkg/auth/webauthn/` module
-  - [ ] WebAuthn registration flow
-  - [ ] WebAuthn authentication flow
-  - [ ] Credential storage and management
-  - [ ] API endpoints: POST /api/v1/auth/webauthn/begin-registration, POST /api/v1/auth/webauthn/finish-registration
+ - [ ] WebAuthn registration flow
+ - [ ] WebAuthn authentication flow
+ - [ ] Credential storage and management
+ - [ ] API endpoints: POST /api/v1/auth/webauthn/begin-registration, POST /api/v1/auth/webauthn/finish-registration
 
 - [ ] **GraphQL Endpoints**: Create `pkg/graphql/` module
-  - [ ] GraphQL schema definition
-  - [ ] Resolvers for auth operations
-  - [ ] Integration with existing REST API
-  - [ ] Endpoint: POST /graphql
+ - [ ] GraphQL schema definition
+ - [ ] Resolvers for auth operations
+ - [ ] Integration with existing REST API
+ - [ ] Endpoint: POST /graphql
 
 - [ ] **Metrics/Observability**: Create `pkg/metrics/` module
-  - [ ] Prometheus metrics collection
-  - [ ] Request tracing and logging
-  - [ ] Health check endpoints
-  - [ ] Performance monitoring dashboards
+ - [ ] Prometheus metrics collection
+ - [ ] Request tracing and logging
+ - [ ] Health check endpoints
+ - [ ] Performance monitoring dashboards
 
 - [ ] **Kubernetes Manifests**: Create `k8s/` directory
-  - [ ] Deployment manifests for AILock service
-  - [ ] ConfigMaps and Secrets templates
-  - [ ] Service and Ingress definitions
-  - [ ] Helm chart for easy deployment
+ - [ ] Deployment manifests for AILock service
+ - [ ] ConfigMaps and Secrets templates
+ - [ ] Service and Ingress definitions
+ - [ ] Helm chart for easy deployment
 
 - [ ] **Admin CLI**: Create `cmd/admin/` directory
-  - [ ] User management commands
-  - [ ] Role and permission management
-  - [ ] Token revocation utilities
-  - [ ] Database maintenance tools
+ - [ ] User management commands
+ - [ ] Role and permission management
+ - [ ] Token revocation utilities
+ - [ ] Database maintenance tools
 
 ### 4. API Implementation Gaps
 

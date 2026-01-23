@@ -63,21 +63,21 @@ Each log entry contains the following fields:
 
 ```python
 {
-    "entry_id": "uuid-v4",
-    "timestamp": "RFC3339 microsecond precision",
-    "input_hash": "SHA-256 hash of input data",
-    "output_hash": "SHA-256 hash of output data",
-    "model_version": "semantic version string",
-    "model_hash": "SHA-256 hash of model weights",
-    "previous_hash": "SHA-256 hash of previous entry",
-    "metadata": {
-        "actor": "user or system identifier",
-        "session_id": "inference session identifier",
-        "environment": "production/staging/development",
-        "hardware": "CPU/GPU/TPU identifier"
-    },
-    "signature": "RSA-2048 signature of entry",
-    "entry_hash": "SHA-256 hash of entire entry"
+ "entry_id": "uuid-v4",
+ "timestamp": "RFC3339 microsecond precision",
+ "input_hash": "SHA-256 hash of input data",
+ "output_hash": "SHA-256 hash of output data",
+ "model_version": "semantic version string",
+ "model_hash": "SHA-256 hash of model weights",
+ "previous_hash": "SHA-256 hash of previous entry",
+ "metadata": {
+ "actor": "user or system identifier",
+ "session_id": "inference session identifier",
+ "environment": "production/staging/development",
+ "hardware": "CPU/GPU/TPU identifier"
+ },
+ "signature": "RSA-2048 signature of entry",
+ "entry_hash": "SHA-256 hash of entire entry"
 }
 ```
 
@@ -125,36 +125,36 @@ The verification algorithm operates as follows:
 
 ```python
 def verify_audit_trail(chain, public_key):
-    """
-    Verify the integrity of the entire audit trail.
-    
-    Returns:
-        (is_valid: bool, violations: List[str])
-    """
-    violations = []
-    
-    # Verify genesis entry
-    if chain[0].previous_hash != "GENESIS":
-        violations.append("Invalid genesis entry")
-    
-    # Verify chain linkage
-    for i in range(1, len(chain)):
-        expected_hash = hash_entry(chain[i-1])
-        if chain[i].previous_hash != expected_hash:
-            violations.append(f"Chain break at entry {i}")
-    
-    # Verify signatures
-    for i, entry in enumerate(chain):
-        if not verify_signature(entry, entry.signature, public_key):
-            violations.append(f"Invalid signature at entry {i}")
-    
-    # Verify entry hashes
-    for i, entry in enumerate(chain):
-        computed_hash = hash_entry(entry)
-        if entry.entry_hash != computed_hash:
-            violations.append(f"Hash mismatch at entry {i}")
-    
-    return (len(violations) == 0, violations)
+ """
+ Verify the integrity of the entire audit trail.
+
+ Returns:
+ (is_valid: bool, violations: List[str])
+ """
+ violations = []
+
+ # Verify genesis entry
+ if chain[0].previous_hash != "GENESIS":
+ violations.append("Invalid genesis entry")
+
+ # Verify chain linkage
+ for i in range(1, len(chain)):
+ expected_hash = hash_entry(chain[i-1])
+ if chain[i].previous_hash != expected_hash:
+ violations.append(f"Chain break at entry {i}")
+
+ # Verify signatures
+ for i, entry in enumerate(chain):
+ if not verify_signature(entry, entry.signature, public_key):
+ violations.append(f"Invalid signature at entry {i}")
+
+ # Verify entry hashes
+ for i, entry in enumerate(chain):
+ computed_hash = hash_entry(entry)
+ if entry.entry_hash != computed_hash:
+ violations.append(f"Hash mismatch at entry {i}")
+
+ return (len(violations) == 0, violations)
 ```
 
 ### Key Features
@@ -198,9 +198,9 @@ from deterministic_audit import AuditedModel
 
 # Wrap any existing model
 model = AuditedModel(
-    your_model, 
-    audit_trail_path="./logs",
-    private_key_path="./keys/private.pem"
+ your_model, 
+ audit_trail_path="./logs",
+ private_key_path="./keys/private.pem"
 )
 
 # Use normally - auditing happens automatically
@@ -232,9 +232,9 @@ pytorch_model = torch.load("model.pt")
 
 # Wrap with audit trail
 audited_model = AuditedModel(
-    pytorch_model,
-    audit_trail_path="./audit_logs",
-    model_version="v1.2.3"
+ pytorch_model,
+ audit_trail_path="./audit_logs",
+ model_version="v1.2.3"
 )
 
 # Use normally
@@ -253,9 +253,9 @@ tokenizer = AutoTokenizer.from_pretrained("gpt2")
 
 # Wrap with audit trail
 audited_model = AuditedModel(
-    model,
-    audit_trail_path="./llm_audit",
-    model_version="gpt2-v1.0"
+ model,
+ audit_trail_path="./llm_audit",
+ model_version="gpt2-v1.0"
 )
 
 # Generate text with automatic auditing
@@ -275,9 +275,9 @@ sklearn_model.fit(X_train, y_train)
 
 # Wrap with audit trail
 audited_model = AuditedModel(
-    sklearn_model,
-    audit_trail_path="./sklearn_audit",
-    model_version="rf-v2.1.0"
+ sklearn_model,
+ audit_trail_path="./sklearn_audit",
+ model_version="rf-v2.1.0"
 )
 
 # Predict with automatic auditing
@@ -350,29 +350,29 @@ reader = AuditTrailReader(audit_trail_path="./logs")
 
 @app.route("/")
 def dashboard():
-    return render_template("dashboard.html")
+ return render_template("dashboard.html")
 
 @app.route("/api/logs")
 def get_logs():
-    start_date = request.args.get("start")
-    end_date = request.args.get("end")
-    model_version = request.args.get("version")
-    
-    logs = reader.query(
-        start_date=start_date,
-        end_date=end_date,
-        model_version=model_version
-    )
-    
-    return jsonify(logs)
+ start_date = request.args.get("start")
+ end_date = request.args.get("end")
+ model_version = request.args.get("version")
+
+ logs = reader.query(
+ start_date=start_date,
+ end_date=end_date,
+ model_version=model_version
+ )
+
+ return jsonify(logs)
 
 @app.route("/api/verify")
 def verify_trail():
-    result = reader.verify_integrity()
-    return jsonify(result)
+ result = reader.verify_integrity()
+ return jsonify(result)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+ app.run(host="0.0.0.0", port=5000)
 ```
 
 ### Compliance Report Generation
@@ -381,51 +381,51 @@ The dashboard generates comprehensive compliance reports that map audit trail da
 
 ```python
 def generate_compliance_report(start_date, end_date, format="pdf"):
-    """
-    Generate compliance report for regulatory submission.
-    
-    Args:
-        start_date: Start of reporting period
-        end_date: End of reporting period
-        format: Output format (json/csv/pdf)
-    
-    Returns:
-        Compliance report in specified format
-    """
-    logs = reader.query(start_date=start_date, end_date=end_date)
-    
-    report = {
-        "reporting_period": {
-            "start": start_date,
-            "end": end_date
-        },
-        "total_inferences": len(logs),
-        "unique_models": count_unique(logs, "model_version"),
-        "unique_actors": count_unique(logs, "actor"),
-        "integrity_status": reader.verify_integrity(),
-        "regulatory_mappings": {
-            "eu_ai_act_article_12": {
-                "record_keeping": "COMPLIANT",
-                "traceability": "COMPLIANT",
-                "evidence": logs
-            },
-            "sox_it_controls": {
-                "change_management": "COMPLIANT",
-                "evidence": logs
-            },
-            "hipaa_164_312_b": {
-                "audit_trail": "COMPLIANT",
-                "evidence": logs
-            }
-        }
-    }
-    
-    if format == "pdf":
-        return generate_pdf_report(report)
-    elif format == "csv":
-        return generate_csv_report(report)
-    else:
-        return report
+ """
+ Generate compliance report for regulatory submission.
+
+ Args:
+ start_date: Start of reporting period
+ end_date: End of reporting period
+ format: Output format (json/csv/pdf)
+
+ Returns:
+ Compliance report in specified format
+ """
+ logs = reader.query(start_date=start_date, end_date=end_date)
+
+ report = {
+ "reporting_period": {
+ "start": start_date,
+ "end": end_date
+ },
+ "total_inferences": len(logs),
+ "unique_models": count_unique(logs, "model_version"),
+ "unique_actors": count_unique(logs, "actor"),
+ "integrity_status": reader.verify_integrity(),
+ "regulatory_mappings": {
+ "eu_ai_act_article_12": {
+ "record_keeping": "COMPLIANT",
+ "traceability": "COMPLIANT",
+ "evidence": logs
+ },
+ "sox_it_controls": {
+ "change_management": "COMPLIANT",
+ "evidence": logs
+ },
+ "hipaa_164_312_b": {
+ "audit_trail": "COMPLIANT",
+ "evidence": logs
+ }
+ }
+ }
+
+ if format == "pdf":
+ return generate_pdf_report(report)
+ elif format == "csv":
+ return generate_csv_report(report)
+ else:
+ return report
 ```
 
 ---
@@ -436,39 +436,39 @@ The Deterministic Audit Trail implementation follows a modular architecture with
 
 ```
 deterministic-audit-trail/
-├── README.md                    # Philosophy, quick start, examples
-├── LICENSE                      # Open source license (Apache 2.0 or MIT)
-├── setup.py                     # Python package configuration
-├── requirements.txt             # Dependencies
+├── README.md # Philosophy, quick start, examples
+├── LICENSE # Open source license (Apache 2.0 or MIT)
+├── setup.py # Python package configuration
+├── requirements.txt # Dependencies
 │
 ├── src/
-│   ├── audit_trail.py          # Core immutable log implementation
-│   ├── crypto.py               # Cryptographic signing and verification
-│   ├── model_wrapper.py        # ML framework wrappers
-│   ├── verification.py         # Audit trail verification logic
-│   └── dashboard.py            # Web dashboard (Flask/FastAPI)
+│ ├── audit_trail.py # Core immutable log implementation
+│ ├── crypto.py # Cryptographic signing and verification
+│ ├── model_wrapper.py # ML framework wrappers
+│ ├── verification.py # Audit trail verification logic
+│ └── dashboard.py # Web dashboard (Flask/FastAPI)
 │
 ├── examples/
-│   ├── basic_usage.py          # Simple example with scikit-learn
-│   ├── llm_inference.py        # Example with Hugging Face LLM
-│   ├── production_setup.py     # Enterprise deployment example
-│   └── compliance_report.py    # Generate audit report
+│ ├── basic_usage.py # Simple example with scikit-learn
+│ ├── llm_inference.py # Example with Hugging Face LLM
+│ ├── production_setup.py # Enterprise deployment example
+│ └── compliance_report.py # Generate audit report
 │
 ├── tests/
-│   ├── test_audit_trail.py
-│   ├── test_crypto.py
-│   ├── test_verification.py
-│   └── test_tampering.py       # Verify tamper detection works
+│ ├── test_audit_trail.py
+│ ├── test_crypto.py
+│ ├── test_verification.py
+│ └── test_tampering.py # Verify tamper detection works
 │
 ├── docs/
-│   ├── architecture.md         # Technical deep dive
-│   ├── compliance.md           # Mapping to regulations (EU AI Act, SOX)
-│   ├── performance.md          # Overhead benchmarks
-│   └── api_reference.md        # Complete API documentation
+│ ├── architecture.md # Technical deep dive
+│ ├── compliance.md # Mapping to regulations (EU AI Act, SOX)
+│ ├── performance.md # Overhead benchmarks
+│ └── api_reference.md # Complete API documentation
 │
 └── benchmarks/
-    ├── latency_overhead.py     # Measure performance impact
-    └── storage_analysis.py     # Audit log storage requirements
+ ├── latency_overhead.py # Measure performance impact
+ └── storage_analysis.py # Audit log storage requirements
 ```
 
 ---
@@ -488,145 +488,145 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 
 class DeterministicAuditTrail:
-    """
-    Cryptographically signed, tamper-evident audit trail for AI systems.
-    
-    This class implements an immutable log structure where each entry is
-    cryptographically signed and chained to the previous entry, making any
-    tampering mathematically detectable.
-    """
-    
-    def __init__(self, private_key_path: str = None):
-        """
-        Initialize the audit trail.
-        
-        Args:
-            private_key_path: Path to RSA private key for signing.
-                             If None, a new key pair is generated.
-        """
-        self.chain: List[Dict] = []
-        self.private_key = self._load_or_generate_key(private_key_path)
-    
-    def _load_or_generate_key(self, key_path: str):
-        """Load existing key or generate new RSA-2048 key pair."""
-        if key_path and os.path.exists(key_path):
-            with open(key_path, "rb") as f:
-                return serialization.load_pem_private_key(
-                    f.read(),
-                    password=None
-                )
-        else:
-            return rsa.generate_private_key(
-                public_exponent=65537,
-                key_size=2048
-            )
-    
-    def _hash_data(self, data: Any) -> str:
-        """Generate SHA-256 hash of data."""
-        return hashlib.sha256(
-            json.dumps(data, sort_keys=True).encode()
-        ).hexdigest()
-    
-    def _sign_entry(self, entry: Dict) -> str:
-        """Cryptographically sign an entry."""
-        entry_bytes = json.dumps(entry, sort_keys=True).encode()
-        signature = self.private_key.sign(
-            entry_bytes,
-            padding.PSS(
-                mgf=padding.MGF1(hashes.SHA256()),
-                salt_length=padding.PSS.MAX_LENGTH
-            ),
-            hashes.SHA256()
-        )
-        return signature.hex()
-    
-    def _verify_signature(self, entry: Dict, signature: str) -> bool:
-        """Verify cryptographic signature."""
-        try:
-            public_key = self.private_key.public_key()
-            entry_bytes = json.dumps(entry, sort_keys=True).encode()
-            public_key.verify(
-                bytes.fromhex(signature),
-                entry_bytes,
-                padding.PSS(
-                    mgf=padding.MGF1(hashes.SHA256()),
-                    salt_length=padding.PSS.MAX_LENGTH
-                ),
-                hashes.SHA256()
-            )
-            return True
-        except Exception:
-            return False
-    
-    def log_inference(self,
-                     input_data: Any,
-                     output_data: Any,
-                     model_version: str,
-                     metadata: Dict = None) -> str:
-        """
-        Log a single model inference with cryptographic signature.
-        
-        Args:
-            input_data: Model input data
-            output_data: Model output data
-            model_version: Semantic version of the model
-            metadata: Optional metadata (actor, session_id, etc.)
-        
-        Returns:
-            entry_hash: Unique identifier for this log entry
-        """
-        entry = {
-            'timestamp': time.time(),
-            'input_hash': self._hash_data(input_data),
-            'output_hash': self._hash_data(output_data),
-            'model_version': model_version,
-            'metadata': metadata or {},
-            'previous_hash': self.chain[-1]['entry_hash'] if self.chain else 'GENESIS'
-        }
-        
-        # Compute entry hash
-        entry['entry_hash'] = self._hash_data(
-            json.dumps(entry, sort_keys=True)
-        )
-        
-        # Sign entry
-        entry['signature'] = self._sign_entry(entry)
-        
-        # Append to chain
-        self.chain.append(entry)
-        
-        return entry['entry_hash']
-    
-    def verify_integrity(self) -> bool:
-        """
-        Verify the entire audit trail has not been tampered with.
-        
-        Returns:
-            True if the chain is valid, False otherwise
-        """
-        for i, entry in enumerate(self.chain):
-            # Verify chain linkage
-            if i > 0:
-                expected_hash = self.chain[i-1]['entry_hash']
-                if entry['previous_hash'] != expected_hash:
-                    return False
-            
-            # Verify signature
-            entry_copy = {k: v for k, v in entry.items() if k != 'signature'}
-            if not self._verify_signature(entry_copy, entry['signature']):
-                return False
-        
-        return True
-    
-    def export_chain(self, filepath: str):
-        """Export the audit chain to a JSON file."""
-        with open(filepath, 'w') as f:
-            json.dump(self.chain, f, indent=2)
-    
-    def import_chain(self, filepath: str):
-        """Import an audit chain from a JSON file."""
-        with open(filepath, 'r') as f:
-            self.chain = json.load(f)
+ """
+ Cryptographically signed, tamper-evident audit trail for AI systems.
+
+ This class implements an immutable log structure where each entry is
+ cryptographically signed and chained to the previous entry, making any
+ tampering mathematically detectable.
+ """
+
+ def __init__(self, private_key_path: str = None):
+ """
+ Initialize the audit trail.
+
+ Args:
+ private_key_path: Path to RSA private key for signing.
+ If None, a new key pair is generated.
+ """
+ self.chain: List[Dict] = []
+ self.private_key = self._load_or_generate_key(private_key_path)
+
+ def _load_or_generate_key(self, key_path: str):
+ """Load existing key or generate new RSA-2048 key pair."""
+ if key_path and os.path.exists(key_path):
+ with open(key_path, "rb") as f:
+ return serialization.load_pem_private_key(
+ f.read(),
+ password=None
+ )
+ else:
+ return rsa.generate_private_key(
+ public_exponent=65537,
+ key_size=2048
+ )
+
+ def _hash_data(self, data: Any) -> str:
+ """Generate SHA-256 hash of data."""
+ return hashlib.sha256(
+ json.dumps(data, sort_keys=True).encode()
+ ).hexdigest()
+
+ def _sign_entry(self, entry: Dict) -> str:
+ """Cryptographically sign an entry."""
+ entry_bytes = json.dumps(entry, sort_keys=True).encode()
+ signature = self.private_key.sign(
+ entry_bytes,
+ padding.PSS(
+ mgf=padding.MGF1(hashes.SHA256()),
+ salt_length=padding.PSS.MAX_LENGTH
+ ),
+ hashes.SHA256()
+ )
+ return signature.hex()
+
+ def _verify_signature(self, entry: Dict, signature: str) -> bool:
+ """Verify cryptographic signature."""
+ try:
+ public_key = self.private_key.public_key()
+ entry_bytes = json.dumps(entry, sort_keys=True).encode()
+ public_key.verify(
+ bytes.fromhex(signature),
+ entry_bytes,
+ padding.PSS(
+ mgf=padding.MGF1(hashes.SHA256()),
+ salt_length=padding.PSS.MAX_LENGTH
+ ),
+ hashes.SHA256()
+ )
+ return True
+ except Exception:
+ return False
+
+ def log_inference(self,
+ input_data: Any,
+ output_data: Any,
+ model_version: str,
+ metadata: Dict = None) -> str:
+ """
+ Log a single model inference with cryptographic signature.
+
+ Args:
+ input_data: Model input data
+ output_data: Model output data
+ model_version: Semantic version of the model
+ metadata: Optional metadata (actor, session_id, etc.)
+
+ Returns:
+ entry_hash: Unique identifier for this log entry
+ """
+ entry = {
+ 'timestamp': time.time(),
+ 'input_hash': self._hash_data(input_data),
+ 'output_hash': self._hash_data(output_data),
+ 'model_version': model_version,
+ 'metadata': metadata or {},
+ 'previous_hash': self.chain[-1]['entry_hash'] if self.chain else 'GENESIS'
+ }
+
+ # Compute entry hash
+ entry['entry_hash'] = self._hash_data(
+ json.dumps(entry, sort_keys=True)
+ )
+
+ # Sign entry
+ entry['signature'] = self._sign_entry(entry)
+
+ # Append to chain
+ self.chain.append(entry)
+
+ return entry['entry_hash']
+
+ def verify_integrity(self) -> bool:
+ """
+ Verify the entire audit trail has not been tampered with.
+
+ Returns:
+ True if the chain is valid, False otherwise
+ """
+ for i, entry in enumerate(self.chain):
+ # Verify chain linkage
+ if i > 0:
+ expected_hash = self.chain[i-1]['entry_hash']
+ if entry['previous_hash'] != expected_hash:
+ return False
+
+ # Verify signature
+ entry_copy = {k: v for k, v in entry.items() if k != 'signature'}
+ if not self._verify_signature(entry_copy, entry['signature']):
+ return False
+
+ return True
+
+ def export_chain(self, filepath: str):
+ """Export the audit chain to a JSON file."""
+ with open(filepath, 'w') as f:
+ json.dump(self.chain, f, indent=2)
+
+ def import_chain(self, filepath: str):
+ """Import an audit chain from a JSON file."""
+ with open(filepath, 'r') as f:
+ self.chain = json.load(f)
 ```
 
 ### Usage Example
@@ -643,9 +643,9 @@ model.fit(X_train, y_train)
 
 # Wrap it with audit trail
 audited_model = AuditedModel(
-    model=model,
-    model_version="v1.0.0",
-    audit_trail_path="./audit_logs"
+ model=model,
+ model_version="v1.0.0",
+ audit_trail_path="./audit_logs"
 )
 
 # Use normally - all inferences are logged
@@ -656,8 +656,8 @@ assert audited_model.verify_audit_trail()
 
 # Generate compliance report
 audited_model.export_report(
-    format="pdf",
-    output_path="compliance_report.pdf"
+ format="pdf",
+ output_path="compliance_report.pdf"
 )
 ```
 
@@ -713,24 +713,24 @@ audited_model.export_report(
 The Deterministic Audit Trail Architecture provides built-in compliance with major regulatory frameworks:
 
 **EU AI Act Article 12 (Record-Keeping Requirements)**:
-- ✅ Automatic logging of all AI system operations
-- ✅ Timestamped records with microsecond precision
-- ✅ Input/output data capture (hashed for privacy)
-- ✅ Model version tracking
-- ✅ Actor identification
-- ✅ Immutable audit logs with tamper detection
+- [PASS] Automatic logging of all AI system operations
+- [PASS] Timestamped records with microsecond precision
+- [PASS] Input/output data capture (hashed for privacy)
+- [PASS] Model version tracking
+- [PASS] Actor identification
+- [PASS] Immutable audit logs with tamper detection
 
 **SOX IT General Controls (Change Management)**:
-- ✅ Cryptographic verification of all system changes
-- ✅ Audit trail of model version deployments
-- ✅ Tamper-evident logging prevents unauthorized modifications
-- ✅ Compliance reports for external auditors
+- [PASS] Cryptographic verification of all system changes
+- [PASS] Audit trail of model version deployments
+- [PASS] Tamper-evident logging prevents unauthorized modifications
+- [PASS] Compliance reports for external auditors
 
 **HIPAA §164.312(b) (Audit Trail Requirements)**:
-- ✅ Logging of all access to protected health information
-- ✅ Tamper-evident audit logs
-- ✅ Retention of audit logs for 6 years (configurable)
-- ✅ Ability to generate audit reports for compliance review
+- [PASS] Logging of all access to protected health information
+- [PASS] Tamper-evident audit logs
+- [PASS] Retention of audit logs for 6 years (configurable)
+- [PASS] Ability to generate audit reports for compliance review
 
 ---
 
@@ -856,8 +856,8 @@ Organizations that adopt cryptographic audit trails today will lead the next gen
 
 ---
 
-**"The Axiom of Determinism guarantees it."**  
-**"The Cryptographic Chain proves it."**  
+**"The Axiom of Determinism guarantees it."** 
+**"The Cryptographic Chain proves it."** 
 **"The Audit Trail records it."**
 
 ---

@@ -7,39 +7,39 @@ This document outlines the complete pull request workflow, review process, merge
 ### Fork and Branch Strategy
 
 1. **Fork the Repository**
-   - Create a personal fork of the AILock repository
-   - Clone your fork locally: `git clone https://github.com/YOUR_USERNAME/AILock.git`
-   - Add upstream remote: `git remote add upstream https://github.com/AXI0MH1VE/AILock.git`
+ - Create a personal fork of the AILock repository
+ - Clone your fork locally: `git clone https://github.com/YOUR_USERNAME/AILock.git`
+ - Add upstream remote: `git remote add upstream https://github.com/AXI0MH1VE/AILock.git`
 
 2. **Create a Feature Branch**
-   - Always branch from `main`: `git checkout main && git pull upstream main`
-   - Use descriptive branch names following convention:
-     - `feature/description` - for new features
-     - `fix/description` - for bug fixes
-     - `docs/description` - for documentation
-     - `refactor/description` - for code refactoring
-     - `security/description` - for security patches
-   - Example: `git checkout -b feature/add-oauth-support`
+ - Always branch from `main`: `git checkout main && git pull upstream main`
+ - Use descriptive branch names following convention:
+ - `feature/description` - for new features
+ - `fix/description` - for bug fixes
+ - `docs/description` - for documentation
+ - `refactor/description` - for code refactoring
+ - `security/description` - for security patches
+ - Example: `git checkout -b feature/add-oauth-support`
 
 3. **Make Your Changes**
-   - Write clear, focused commits
-   - Follow [Conventional Commits](https://www.conventionalcommits.org/) specification:
-     - `feat:` - new features
-     - `fix:` - bug fixes
-     - `docs:` - documentation changes
-     - `test:` - test additions or modifications
-     - `refactor:` - code refactoring
-     - `security:` - security-related changes
-     - `chore:` - maintenance tasks
-   - Keep commits atomic and logically grouped
+ - Write clear, focused commits
+ - Follow [Conventional Commits](https://www.conventionalcommits.org/) specification:
+ - `feat:` - new features
+ - `fix:` - bug fixes
+ - `docs:` - documentation changes
+ - `test:` - test additions or modifications
+ - `refactor:` - code refactoring
+ - `security:` - security-related changes
+ - `chore:` - maintenance tasks
+ - Keep commits atomic and logically grouped
 
 4. **Push and Create PR**
-   - Push to your fork: `git push origin feature/your-branch`
-   - Navigate to the AILock repository on GitHub
-   - Click "New Pull Request" or use the prompted banner
-   - Select your fork and branch as the source
-   - Provide a clear, descriptive title and detailed description
-   - Reference any related issues with `Closes #123` or `Fixes #456`
+ - Push to your fork: `git push origin feature/your-branch`
+ - Navigate to the AILock repository on GitHub
+ - Click "New Pull Request" or use the prompted banner
+ - Select your fork and branch as the source
+ - Provide a clear, descriptive title and detailed description
+ - Reference any related issues with `Closes #123` or `Fixes #456`
 
 ## 2. Pre-Merge Checklist
 
@@ -79,10 +79,10 @@ Before submitting a PR for review, ensure the following items are complete:
 ### Reviewer Requirements
 - **Minimum Reviewers**: 2 maintainers must approve
 - **Code Owner Approval**: Required for changes to:
-  - Security modules (`/security/**`)
-  - Core infrastructure (`/infrastructure/**`)
-  - API contracts (`/docs/API_CONTRACT.md`)
-  - CI/CD pipelines (`.github/workflows/**`)
+ - Security modules (`/security/**`)
+ - Core infrastructure (`/infrastructure/**`)
+ - API contracts (`/docs/API_CONTRACT.md`)
+ - CI/CD pipelines (`.github/workflows/**`)
 
 ### Review Checklist
 
@@ -125,30 +125,30 @@ Reviewers should verify:
 ### Best Practices
 
 1. **Acknowledge Feedback Promptly**
-   - Respond to all review comments
-   - Ask clarifying questions if feedback is unclear
-   - Mark conversations as resolved only after addressing
+ - Respond to all review comments
+ - Ask clarifying questions if feedback is unclear
+ - Mark conversations as resolved only after addressing
 
 2. **Update Your PR**
-   - Make requested changes in new commits (don't force-push during review)
-   - Reference which review comments each commit addresses
-   - Push updates: `git push origin feature/your-branch`
+ - Make requested changes in new commits (don't force-push during review)
+ - Reference which review comments each commit addresses
+ - Push updates: `git push origin feature/your-branch`
 
 3. **Re-request Review**
-   - After addressing feedback, re-request review from reviewers
-   - Add a comment summarizing what was changed
-   - Be specific: "Updated per @reviewer's suggestion in comment #3"
+ - After addressing feedback, re-request review from reviewers
+ - Add a comment summarizing what was changed
+ - Be specific: "Updated per @reviewer's suggestion in comment #3"
 
 4. **Handling Disagreements**
-   - Engage constructively and professionally
-   - Provide technical rationale for alternative approaches
-   - Escalate to project lead if consensus cannot be reached
-   - Be willing to compromise for the good of the project
+ - Engage constructively and professionally
+ - Provide technical rationale for alternative approaches
+ - Escalate to project lead if consensus cannot be reached
+ - Be willing to compromise for the good of the project
 
 5. **Keeping PR Updated**
-   - Regularly sync with upstream `main`: `git pull upstream main`
-   - Resolve merge conflicts promptly
-   - Rebase if requested: `git rebase upstream/main`
+ - Regularly sync with upstream `main`: `git pull upstream main`
+ - Resolve merge conflicts promptly
+ - Rebase if requested: `git rebase upstream/main`
 
 ## 5. Merge Strategy
 
@@ -164,9 +164,9 @@ Reviewers should verify:
 **Rebase and Merge**
 - Used when commit history is already clean and valuable
 - Each commit in PR must:
-  - Follow Conventional Commits format
-  - Be atomic and self-contained
-  - Pass all tests individually
+ - Follow Conventional Commits format
+ - Be atomic and self-contained
+ - Pass all tests individually
 - Maintains detailed commit history
 - Requires pre-approval from maintainer
 
@@ -272,27 +272,27 @@ Maintainer performing merge must verify:
 If a security vulnerability is discovered in a merged PR:
 
 1. **Immediate Actions**
-   - Notify all maintainers immediately via secure channel
-   - Assess severity using CVSS scoring
-   - Do NOT discuss publicly until patch is ready
+ - Notify all maintainers immediately via secure channel
+ - Assess severity using CVSS scoring
+ - Do NOT discuss publicly until patch is ready
 
 2. **Critical Vulnerabilities (CVSS ≥ 7.0)**
-   - Revert the PR immediately
-   - Create private security advisory on GitHub
-   - Develop and test fix in private fork
-   - Coordinate disclosure timeline
+ - Revert the PR immediately
+ - Create private security advisory on GitHub
+ - Develop and test fix in private fork
+ - Coordinate disclosure timeline
 
 3. **Medium Vulnerabilities (CVSS 4.0-6.9)**
-   - Evaluate if revert is necessary
-   - Create hotfix branch from affected commit
-   - Fast-track fix through expedited review
-   - Document in security advisory
+ - Evaluate if revert is necessary
+ - Create hotfix branch from affected commit
+ - Fast-track fix through expedited review
+ - Document in security advisory
 
 4. **Post-Incident**
-   - Conduct retrospective on how vulnerability was introduced
-   - Update review checklist to prevent recurrence
-   - Enhance automated security scanning rules
-   - Document lessons learned
+ - Conduct retrospective on how vulnerability was introduced
+ - Update review checklist to prevent recurrence
+ - Enhance automated security scanning rules
+ - Document lessons learned
 
 ### Revert Procedure
 
@@ -306,35 +306,35 @@ If a security vulnerability is discovered in a merged PR:
 **Revert Process:**
 
 1. **Create Revert PR**
-   ```bash
-   git checkout main
-   git pull upstream main
-   git revert <commit-sha>
-   git push origin revert-<original-pr-number>
-   ```
+ ```bash
+ git checkout main
+ git pull upstream main
+ git revert <commit-sha>
+ git push origin revert-<original-pr-number>
+ ```
 
 2. **Revert PR Requirements**
-   - Title: `revert: <original PR title> (#original-pr-number)`
-   - Reference original PR: `Reverts #123`
-   - Explain reason for revert clearly
-   - Link to issue tracking the fix
+ - Title: `revert: <original PR title> (#original-pr-number)`
+ - Reference original PR: `Reverts #123`
+ - Explain reason for revert clearly
+ - Link to issue tracking the fix
 
 3. **Expedited Review**
-   - Requires only 1 maintainer approval (vs. usual 2)
-   - Fast-tracked through CI (parallel execution)
-   - Merge as soon as approval + green CI
+ - Requires only 1 maintainer approval (vs. usual 2)
+ - Fast-tracked through CI (parallel execution)
+ - Merge as soon as approval + green CI
 
 4. **Communication**
-   - Post in original PR explaining revert
-   - Update any related issues
-   - Notify affected users/contributors
-   - Document in CHANGELOG under "Reverted"
+ - Post in original PR explaining revert
+ - Update any related issues
+ - Notify affected users/contributors
+ - Document in CHANGELOG under "Reverted"
 
 5. **Follow-up**
-   - Create issue to re-implement feature correctly
-   - Reference reverted PR in new implementation PR
-   - Add regression test before re-merging
-   - Extra scrutiny during re-implementation review
+ - Create issue to re-implement feature correctly
+ - Reference reverted PR in new implementation PR
+ - Add regression test before re-merging
+ - Extra scrutiny during re-implementation review
 
 ### Rollback Verification
 

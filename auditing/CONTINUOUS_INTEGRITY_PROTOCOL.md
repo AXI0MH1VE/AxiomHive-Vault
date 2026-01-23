@@ -22,9 +22,9 @@ The Commercial Attestation is tied directly to the audited integrity score.
 
 * **Renewal Criteria:** The **MI-CERT** is automatically renewed if the 7-day rolling average of the **production $R_{11D}$ score** remains below the **L1 Threshold ($\mathbf{0.20}$)**. Renewal generates a new **Cryptographic Attestation** hash signed by the **HSM Root of Trust**.
 * **Automatic Revocation Trigger:**
-    1.  **$R_{11D}$ Breach:** Any measured production $R_{11D}$ score remaining above the **L2 Threshold ($\mathbf{0.50}$)** for more than 4 hours.
-    2.  **Immutable Artifact Failure:** A failed hash check against the **DEPLOYMENT\_MANIFEST.json** Merkle Root.
-    3.  **Temporal Key Expiration:** Failure of the automated **KEY\_MANAGEMENT\_CONTRACT.md** rotation cycle (e.g., mTLS certificate or TOCTTOU Timer Seed expiration).
+ 1. **$R_{11D}$ Breach:** Any measured production $R_{11D}$ score remaining above the **L2 Threshold ($\mathbf{0.50}$)** for more than 4 hours.
+ 2. **Immutable Artifact Failure:** A failed hash check against the **DEPLOYMENT\_MANIFEST.json** Merkle Root.
+ 3. **Temporal Key Expiration:** Failure of the automated **KEY\_MANAGEMENT\_CONTRACT.md** rotation cycle (e.g., mTLS certificate or TOCTTOU Timer Seed expiration).
 * **Revocation Action:** Immediate, immutable logging of the revocation event. All production systems are forced into **L3: Critical Exhaustion Lockdown**.
 
 ---

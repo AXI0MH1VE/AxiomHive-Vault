@@ -10,8 +10,8 @@ The containment measures must be disproportionately secure relative to the risk.
 
 * **Technology:** **Kata Containers** or equivalent lightweight Virtual Machine (VM) based technology is mandated over standard containers (e.g., Docker, runc) to guarantee **hardware-level isolation** via a minimal hypervisor (VMM).
 * **Spatial Closure Enforcement:**
-    * **Read-Only Filesystem:** Mandatory Read-Only Root Filesystem (`/`). Execution binaries must be loaded from pre-verified, immutable locations only.
-    * **Network Isolation:** Must operate in a dedicated, isolated network namespace with **ZERO** inbound or outbound connectivity to production services, except for the secure logging channel.
+ * **Read-Only Filesystem:** Mandatory Read-Only Root Filesystem (`/`). Execution binaries must be loaded from pre-verified, immutable locations only.
+ * **Network Isolation:** Must operate in a dedicated, isolated network namespace with **ZERO** inbound or outbound connectivity to production services, except for the secure logging channel.
 * **Resource Limitation:** CPU/Memory limits (e.g., 1 Core, 1GB RAM) are strict and non-negotiable, ensuring a denial-of-service attack cannot be executed via the sandbox itself.
 
 ### 2. Forensic & Neutralization Mandate

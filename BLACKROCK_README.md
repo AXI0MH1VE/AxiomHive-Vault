@@ -6,38 +6,38 @@ This directory contains the complete implementation of the **BlackRock Implement
 
 ## Key Features
 
-✓ **Q1.31 Fixed-Point Arithmetic** - Bit-exact reproducibility  
-✓ **Deterministic Coherence Gate (DCG)** - Eliminates hallucinations  
-✓ **SAT Guards** - Structural impossibility of unsafe states  
-✓ **AxiomShard Audit Logging** - Immutable cryptographic chain  
-✓ **Monument Protocol Generator** - Deterministic rulesets  
-✓ **AHS Calculation Engine** - BlackRock-grade financial math  
-✓ **EU AI Act Compliance** - Articles 12, 13, 14, 15  
-✓ **Zero External Dependencies** - Sovereign infrastructure
+ **Q1.31 Fixed-Point Arithmetic** - Bit-exact reproducibility 
+ **Deterministic Coherence Gate (DCG)** - Eliminates hallucinations 
+ **SAT Guards** - Structural impossibility of unsafe states 
+ **AxiomShard Audit Logging** - Immutable cryptographic chain 
+ **Monument Protocol Generator** - Deterministic rulesets 
+ **AHS Calculation Engine** - BlackRock-grade financial math 
+ **EU AI Act Compliance** - Articles 12, 13, 14, 15 
+ **Zero External Dependencies** - Sovereign infrastructure
 
 ## Directory Structure
 
 ```
 AxiomHive-Vault/
 ├── pkg/
-│   ├── q131/              # Q1.31 fixed-point arithmetic
-│   │   ├── q131.go
-│   │   └── q131_test.go
-│   ├── dcg/               # Deterministic Coherence Gate
-│   │   └── dcg.go
-│   ├── satguard/          # SAT Guards with Inverted Hamiltonian
-│   │   └── satguard.go
-│   ├── axiomshard/        # Cryptographic audit logging
-│   │   └── axiomshard.go
-│   ├── monument/          # Monument Protocol generator
-│   │   └── monument.go
-│   └── ahs/               # AHS calculation engine
-│       └── ahs.go
+│ ├── q131/ # Q1.31 fixed-point arithmetic
+│ │ ├── q131.go
+│ │ └── q131_test.go
+│ ├── dcg/ # Deterministic Coherence Gate
+│ │ └── dcg.go
+│ ├── satguard/ # SAT Guards with Inverted Hamiltonian
+│ │ └── satguard.go
+│ ├── axiomshard/ # Cryptographic audit logging
+│ │ └── axiomshard.go
+│ ├── monument/ # Monument Protocol generator
+│ │ └── monument.go
+│ └── ahs/ # AHS calculation engine
+│ └── ahs.go
 ├── cmd/
-│   └── blackrock-engine/  # Main orchestrator
-│       └── main.go
-├── BLACKROCK_IMPLEMENTATION.md  # Complete documentation
-└── BLACKROCK_README.md          # This file
+│ └── blackrock-engine/ # Main orchestrator
+│ └── main.go
+├── BLACKROCK_IMPLEMENTATION.md # Complete documentation
+└── BLACKROCK_README.md # This file
 ```
 
 ## Quick Start
@@ -94,9 +94,9 @@ Deterministic: true
 
 === Execution Complete ===
 All reports exported to current directory
-Chain integrity verified: ✓
-EU AI Act compliance: ✓
-Zero-entropy guarantee: ✓
+Chain integrity verified: 
+EU AI Act compliance: 
+Zero-entropy guarantee: 
 ```
 
 ## Core Components
@@ -138,7 +138,7 @@ gate.RegisterInvariant(dcg.InvariantNoNaN())
 // Validate data
 result := gate.Validate(dataVector)
 if !result.Valid {
-    log.Printf("Violations: %v", result.Violations)
+ log.Printf("Violations: %v", result.Violations)
 }
 ```
 
@@ -164,7 +164,7 @@ proposal := satguard.ActionProposal{...}
 result := guard.Validate(proposal)
 
 if result.Decision != "ALLOW" {
-    log.Printf("Denied: %s", result.LogicReceipt)
+ log.Printf("Denied: %s", result.LogicReceipt)
 }
 ```
 
@@ -209,10 +209,10 @@ builder := monument.NewProtocolBuilder("OMEGA-7N-RCSM-001")
 
 // Generate protocol from intent
 intent := monument.IntentPacket{
-    Intent:      "Identify liquidity gaps",
-    Objective:   "Detect market inefficiencies",
-    Constraints: []string{"SEC compliance", "Risk limits"},
-    Parameters:  map[string]interface{}{...},
+ Intent: "Identify liquidity gaps",
+ Objective: "Detect market inefficiencies",
+ Constraints: []string{"SEC compliance", "Risk limits"},
+ Parameters: map[string]interface{}{...},
 }
 
 protocol := builder.GenerateProtocol(intent, "LiquidityGap", "1.0.0")
@@ -237,8 +237,8 @@ engine := ahs.NewAHSEngine("OMEGA-7N-RCSM-001")
 
 // Perform calculation
 request := ahs.CalculationRequest{
-    Type:       "portfolio_optimization",
-    Parameters: map[string]interface{}{...},
+ Type: "portfolio_optimization",
+ Parameters: map[string]interface{}{...},
 }
 
 result := engine.Calculate(request)
@@ -256,28 +256,28 @@ deterministic, msg := engine.VerifyDeterminism(request)
 
 ## EU AI Act Compliance
 
-### Article 12: Record-Keeping ✓
+### Article 12: Record-Keeping 
 
 - Automatic logging via AxiomShard
 - SHA-256 cryptographic hashing
 - Immutable audit chain
 - 7-year retention capability
 
-### Article 13: Transparency ✓
+### Article 13: Transparency 
 
 - Logic receipts from SAT Guards
 - Glass Box Mandate (all logic visible)
 - No black-box neural networks
 - Boolean clarity
 
-### Article 14: Human Oversight ✓
+### Article 14: Human Oversight 
 
 - Global kill switch
 - Sole Key Holder authority
 - Human override logging
 - Intervention capability
 
-### Article 15: Accuracy ✓
+### Article 15: Accuracy 
 
 - Q1.31 eliminates floating-point errors
 - 0% hallucination rate
@@ -340,11 +340,11 @@ journalctl -u blackrock-engine -f
 ```bash
 # Build static binary
 CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo \
-    -o blackrock-engine ./cmd/blackrock-engine/
+ -o blackrock-engine ./cmd/blackrock-engine/
 
 # Create Firecracker VM
 firecracker --api-sock /tmp/firecracker.socket \
-    --config-file firecracker-config.json
+ --config-file firecracker-config.json
 ```
 
 ## Configuration
@@ -356,7 +356,7 @@ export COMPLIANCE_ID="OMEGA-7N-RCSM-001"
 export DCG_STRICT_MODE="true"
 export DCG_ZERO_TOLERANCE="true"
 export SAT_GUARD_STRICT_MODE="true"
-export AUDIT_RETENTION_DAYS="2555"  # 7 years
+export AUDIT_RETENTION_DAYS="2555" # 7 years
 ```
 
 ### Ground Truth Database
@@ -375,37 +375,37 @@ engine.satGuard.RegisterSafeState("calculate:portfolio_optimization")
 
 ### Q1.31 Overflow
 
-**Problem:** Values exceed [-1, 1] range  
+**Problem:** Values exceed [-1, 1] range 
 **Solution:** Normalize inputs before conversion
 
 ```go
-normalized := value / 1000.0  // Scale to [-1, 1]
+normalized := value / 1000.0 // Scale to [-1, 1]
 q := q131.FromFloat64(normalized)
 ```
 
 ### DCG Validation Failure
 
-**Problem:** Data rejected by DCG  
+**Problem:** Data rejected by DCG 
 **Solution:** Check violations in result
 
 ```go
 result := dcg.Validate(data)
 if !result.Valid {
-    for _, violation := range result.Violations {
-        log.Printf("Violation: %s", violation)
-    }
+ for _, violation := range result.Violations {
+ log.Printf("Violation: %s", violation)
+ }
 }
 ```
 
 ### SAT Guard Denial
 
-**Problem:** Action blocked by SAT Guard  
+**Problem:** Action blocked by SAT Guard 
 **Solution:** Review logic receipt
 
 ```go
 result := satGuard.Validate(proposal)
 if result.Decision == "DENY" {
-    log.Printf("Logic Receipt:\n%s", result.LogicReceipt)
+ log.Printf("Logic Receipt:\n%s", result.LogicReceipt)
 }
 ```
 
@@ -433,13 +433,13 @@ See `cmd/blackrock-engine/main.go` for complete examples:
 
 ## Contact
 
-**Operator:** Alexis M. Adams  
-**Organization:** AXI0MH1VE Authority Kernel  
-**Compliance ID:** OMEGA-7N-RCSM-001  
+**Operator:** Alexis M. Adams 
+**Organization:** AXI0MH1VE Authority Kernel 
+**Compliance ID:** OMEGA-7N-RCSM-001 
 **Repository:** https://github.com/AXI0MH1VE/AILock
 
 ---
 
-**The Axiom of Determinism guarantees it.**  
-**The Invariant Wealth Kernel executes it.**  
+**The Axiom of Determinism guarantees it.** 
+**The Invariant Wealth Kernel executes it.** 
 **The Proof of Execution records it.**

@@ -13,21 +13,21 @@ The proxy implements robust TLS security according to industry best practices:
 1. **Protocol Versions**: Only TLS 1.2 and TLS 1.3 are supported. SSLv3, TLS 1.0, and TLS 1.1 are explicitly disabled.
 
 2. **Cipher Suites**: Modern, secure cipher suites are configured:
-   - TLS 1.3: `TLS_AES_128_GCM_SHA256`, `TLS_AES_256_GCM_SHA384`, `TLS_CHACHA20_POLY1305_SHA256`
-   - TLS 1.2: `ECDHE-RSA-AES128-GCM-SHA256`, `ECDHE-RSA-AES256-GCM-SHA384`, `ECDHE-RSA-CHACHA20-POLY1305`
-   - Forward secrecy enabled through ECDHE key exchange
-   - No CBC-mode ciphers (vulnerable to padding oracle attacks)
-   - No RC4, 3DES, or other weak ciphers
+ - TLS 1.3: `TLS_AES_128_GCM_SHA256`, `TLS_AES_256_GCM_SHA384`, `TLS_CHACHA20_POLY1305_SHA256`
+ - TLS 1.2: `ECDHE-RSA-AES128-GCM-SHA256`, `ECDHE-RSA-AES256-GCM-SHA384`, `ECDHE-RSA-CHACHA20-POLY1305`
+ - Forward secrecy enabled through ECDHE key exchange
+ - No CBC-mode ciphers (vulnerable to padding oracle attacks)
+ - No RC4, 3DES, or other weak ciphers
 
 3. **ACME Certificate Management**: Automated certificate provisioning and renewal via Let's Encrypt or other ACME providers:
-   - Supported challenge types: `http-01`, `tls-alpn-01`
-   - Automatic renewal starting 30 days before expiration
-   - Staging environment support for testing
+ - Supported challenge types: `http-01`, `tls-alpn-01`
+ - Automatic renewal starting 30 days before expiration
+ - Staging environment support for testing
 
 4. **Certificate Storage**: Certificates are stored securely with proper permissions:
-   - Private keys: 0600 (owner read/write only)
-   - Certificates: 0644 (world-readable)
-   - Configurable storage path
+ - Private keys: 0600 (owner read/write only)
+ - Certificates: 0644 (world-readable)
+ - Configurable storage path
 
 ### CLI Flags for TLS
 
@@ -64,29 +64,29 @@ The following command-line flags control TLS behavior:
 
 ```bash
 ./ailock-proxy \
-  --tls-enabled \
-  --tls-port 443 \
-  --acme-enabled \
-  --acme-email admin@example.com \
-  --acme-domains api.example.com \
-  --acme-challenge http-01 \
-  --acme-storage-path /var/lib/ailock/certs \
-  --tls-min-version 1.2
+ --tls-enabled \
+ --tls-port 443 \
+ --acme-enabled \
+ --acme-email admin@example.com \
+ --acme-domains api.example.com \
+ --acme-challenge http-01 \
+ --acme-storage-path /var/lib/ailock/certs \
+ --tls-min-version 1.2
 ```
 
 #### Staging/Testing Configuration
 
 ```bash
 ./ailock-proxy \
-  --tls-enabled \
-  --tls-port 8443 \
-  --acme-enabled \
-  --acme-email test@example.com \
-  --acme-domains test.example.com \
-  --acme-challenge http-01 \
-  --acme-storage-path ./test-certs \
-  --acme-staging \
-  --tls-min-version 1.2
+ --tls-enabled \
+ --tls-port 8443 \
+ --acme-enabled \
+ --acme-email test@example.com \
+ --acme-domains test.example.com \
+ --acme-challenge http-01 \
+ --acme-storage-path ./test-certs \
+ --acme-staging \
+ --tls-min-version 1.2
 ```
 
 **Note**: The `--acme-staging` flag uses Let's Encrypt's staging environment, which has higher rate limits and issues untrusted certificates for testing.
@@ -97,34 +97,34 @@ The following command-line flags control TLS behavior:
 
 ```yaml
 tls:
-  enabled: true
-  port: 443
-  min_version: "1.2"
-  
-  # ACME configuration
-  acme:
-    enabled: true
-    email: "security@example.com"
-    domains:
-      - "api.example.com"
-      - "proxy.example.com"
-    challenge_type: "http-01"
-    storage_path: "/var/lib/ailock/acme-certs"
-    staging: false
-    renewal_days: 30
-  
-  # Or use manual certificates
-  # manual:
-  #   cert_file: "/etc/ailock/tls/cert.pem"
-  #   key_file: "/etc/ailock/tls/key.pem"
-  
-  # Advanced cipher configuration (optional)
-  cipher_suites:
-    - "TLS_AES_128_GCM_SHA256"
-    - "TLS_AES_256_GCM_SHA384"
-    - "TLS_CHACHA20_POLY1305_SHA256"
-    - "ECDHE-RSA-AES128-GCM-SHA256"
-    - "ECDHE-RSA-AES256-GCM-SHA384"
+ enabled: true
+ port: 443
+ min_version: "1.2"
+
+ # ACME configuration
+ acme:
+ enabled: true
+ email: "security@example.com"
+ domains:
+ - "api.example.com"
+ - "proxy.example.com"
+ challenge_type: "http-01"
+ storage_path: "/var/lib/ailock/acme-certs"
+ staging: false
+ renewal_days: 30
+
+ # Or use manual certificates
+ # manual:
+ # cert_file: "/etc/ailock/tls/cert.pem"
+ # key_file: "/etc/ailock/tls/key.pem"
+
+ # Advanced cipher configuration (optional)
+ cipher_suites:
+ - "TLS_AES_128_GCM_SHA256"
+ - "TLS_AES_256_GCM_SHA384"
+ - "TLS_CHACHA20_POLY1305_SHA256"
+ - "ECDHE-RSA-AES128-GCM-SHA256"
+ - "ECDHE-RSA-AES256-GCM-SHA384"
 ```
 
 #### Docker Compose Example
@@ -132,24 +132,24 @@ tls:
 ```yaml
 version: '3.8'
 services:
-  ailock-proxy:
-    image: ailock/proxy:latest
-    command:
-      - --tls-enabled
-      - --tls-port=443
-      - --acme-enabled
-      - --acme-email=admin@example.com
-      - --acme-domains=api.example.com
-      - --acme-challenge=http-01
-      - --acme-storage-path=/certs
-      - --tls-min-version=1.2
-    ports:
-      - "443:443"
-      - "80:80"  # Required for http-01 challenge
-    volumes:
-      - ./certs:/certs
-    environment:
-      - LOG_LEVEL=info
+ ailock-proxy:
+ image: ailock/proxy:latest
+ command:
+ - --tls-enabled
+ - --tls-port=443
+ - --acme-enabled
+ - --acme-email=admin@example.com
+ - --acme-domains=api.example.com
+ - --acme-challenge=http-01
+ - --acme-storage-path=/certs
+ - --tls-min-version=1.2
+ ports:
+ - "443:443"
+ - "80:80" # Required for http-01 challenge
+ volumes:
+ - ./certs:/certs
+ environment:
+ - LOG_LEVEL=info
 ```
 
 ### Security Best Practices

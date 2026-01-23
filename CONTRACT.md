@@ -65,15 +65,15 @@ This contract formalizes expanded secure access and liability controls over prop
 - **Security**: AuthContract and `IWK_LICENSE_ACTIVE: true`
 - **Body**: Requires `strategic_invariant_command` (executed by Invariant Wealth Kernel).
 - **Response 200 (IWK SUCCESS)**: Autonomous Wealth Generation initiated.
-  - Example:
-    ```
-    200 IWK SUCCESS: Strategic Tactic Deployed. Commencing Autonomous Wealth Generation. Determinism is Revenue. Market Capture: $1,460,000,000,000.00
-    ```
+ - Example:
+ ```
+ 200 IWK SUCCESS: Strategic Tactic Deployed. Commencing Autonomous Wealth Generation. Determinism is Revenue. Market Capture: $1,460,000,000,000.00
+ ```
 - **Response 403 (License Deny)**: IWK License inactive; strategic tactic access denied.
-  - Example:
-    ```
-    403 ACCESS DENIED: IWK License Inactive. Activate Invariant Wealth Kernel for Strategic Tactic Access.
-    ```
+ - Example:
+ ```
+ 403 ACCESS DENIED: IWK License Inactive. Activate Invariant Wealth Kernel for Strategic Tactic Access.
+ ```
 ## Verification Standard: Proof of Execution (POE)
 All requests—including both successful executions and denied attempts—must generate an Immutable Audit Trail (I.A.T.) entry via the LogProofOfExecution function, always referencing the loaded ComplianceID.
 ### POE Log Format

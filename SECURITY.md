@@ -16,9 +16,9 @@ We will respond within 48 hours and work with you to address the issue.
 
 ## Supported Versions
 
-| Version | Supported          |
+| Version | Supported |
 | ------- | ------------------ |
-| main    | :white_check_mark: |
+| main | :white_check_mark: |
 
 ## Security Measures
 
@@ -56,20 +56,20 @@ We will respond within 48 hours and work with you to address the issue.
 
 ### Before Committing
 1. Never commit files containing:
-   - API keys or tokens
-   - Database credentials
-   - Private keys or certificates
-   - Real configuration files
+ - API keys or tokens
+ - Database credentials
+ - Private keys or certificates
+ - Real configuration files
 
 2. Always use:
-   - Environment variables for secrets
-   - `.example` suffix for config templates
-   - Git pre-commit hooks (recommended)
+ - Environment variables for secrets
+ - `.example` suffix for config templates
+ - Git pre-commit hooks (recommended)
 
 3. Review changes:
-   ```bash
-   git diff  # Review what you're about to commit
-   ```
+ ```bash
+ git diff # Review what you're about to commit
+ ```
 
 ### Setting Up Pre-commit Hooks
 
@@ -105,20 +105,20 @@ cp config.example.yaml config.yaml
 If a security breach occurs:
 
 1. **Immediate Actions**
-   - Revoke all compromised credentials
-   - Rotate API keys and tokens
-   - Change database passwords
-   - Update JWT signing keys
+ - Revoke all compromised credentials
+ - Rotate API keys and tokens
+ - Change database passwords
+ - Update JWT signing keys
 
 2. **Investigation**
-   - Review audit logs
-   - Identify scope of breach
-   - Document timeline
+ - Review audit logs
+ - Identify scope of breach
+ - Document timeline
 
 3. **Communication**
-   - Notify affected users within 72 hours
-   - Provide transparency report
-   - Document lessons learned
+ - Notify affected users within 72 hours
+ - Provide transparency report
+ - Document lessons learned
 
 ## Security Audit Schedule
 
@@ -136,10 +136,10 @@ This project maintains compliance with:
 
 ## Contact
 
-Security Team: security@axiomhive.com  
+Security Team: security@axiomhive.com 
 PGP Key: [Add your PGP key fingerprint if available]
 
 ---
 
-**Last Updated:** 2025-11-08  
+**Last Updated:** 2025-11-08 
 **Policy Version:** 1.0
