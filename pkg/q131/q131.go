@@ -18,22 +18,22 @@ type Q131 int32
 const (
 	// FracBits is the number of fractional bits in Q1.31 format
 	FracBits = 31
-	
+
 	// Scale is 2^31 used for conversion
 	Scale = 1 << FracBits
-	
+
 	// MaxValue is the maximum representable value (approaching 1.0)
 	MaxValue = Q131(0x7FFFFFFF)
-	
+
 	// MinValue is the minimum representable value (-1.0)
 	MinValue = Q131(-0x80000000)
-	
+
 	// One represents 1.0 in Q1.31 format
 	One = Q131(0x7FFFFFFF)
-	
+
 	// Zero represents 0.0 in Q1.31 format
 	Zero = Q131(0)
-	
+
 	// Epsilon is the smallest representable positive value
 	Epsilon = Q131(1)
 )
@@ -48,7 +48,7 @@ func FromFloat64(f float64) Q131 {
 	if f <= -1.0 {
 		return MinValue
 	}
-	
+
 	// Convert to Q1.31
 	scaled := f * float64(Scale)
 	return Q131(int32(scaled))
@@ -63,7 +63,7 @@ func (q Q131) ToFloat64() float64 {
 // Add performs deterministic addition with overflow protection.
 func (q Q131) Add(other Q131) Q131 {
 	result := int64(q) + int64(other)
-	
+
 	// Clamp on overflow
 	if result > int64(MaxValue) {
 		return MaxValue
@@ -71,14 +71,14 @@ func (q Q131) Add(other Q131) Q131 {
 	if result < int64(MinValue) {
 		return MinValue
 	}
-	
+
 	return Q131(result)
 }
 
 // Sub performs deterministic subtraction with underflow protection.
 func (q Q131) Sub(other Q131) Q131 {
 	result := int64(q) - int64(other)
-	
+
 	// Clamp on underflow
 	if result > int64(MaxValue) {
 		return MaxValue
@@ -86,7 +86,7 @@ func (q Q131) Sub(other Q131) Q131 {
 	if result < int64(MinValue) {
 		return MinValue
 	}
-	
+
 	return Q131(result)
 }
 
@@ -95,7 +95,7 @@ func (q Q131) Sub(other Q131) Q131 {
 func (q Q131) Mul(other Q131) Q131 {
 	// Use 64-bit intermediate to prevent overflow
 	result := (int64(q) * int64(other)) >> FracBits
-	
+
 	// Clamp to valid range
 	if result > int64(MaxValue) {
 		return MaxValue
@@ -103,7 +103,7 @@ func (q Q131) Mul(other Q131) Q131 {
 	if result < int64(MinValue) {
 		return MinValue
 	}
-	
+
 	return Q131(result)
 }
 
@@ -117,10 +117,10 @@ func (q Q131) Div(other Q131) Q131 {
 		}
 		return MinValue
 	}
-	
+
 	// Use 64-bit intermediate to maintain precision
 	result := (int64(q) << FracBits) / int64(other)
-	
+
 	// Clamp to valid range
 	if result > int64(MaxValue) {
 		return MaxValue
@@ -128,7 +128,7 @@ func (q Q131) Div(other Q131) Q131 {
 	if result < int64(MinValue) {
 		return MinValue
 	}
-	
+
 	return Q131(result)
 }
 
@@ -148,8 +148,10 @@ func (q Q131) Abs() Q131 {
 	return q
 }
 
-// Sqrt computes the square root using Newton-Raphson method.
-// Deterministic implementation with guaranteed convergence.
+// Sqrt computes the square root using integer Newton-Raphson method.
+// For Q1.31 format: q represents the value q/2^31.
+// sqrt(q/2^31) in Q1.31 = sqrt(q/2^31) * 2^31 = sqrt(q) * 2^15.5 = sqrt(q << 31).
+// So we compute isqrt(val << 31) where val = uint64(q).
 func (q Q131) Sqrt() Q131 {
 	if q <= Zero {
 		return Zero
@@ -157,46 +159,38 @@ func (q Q131) Sqrt() Q131 {
 	if q == MaxValue || q == One {
 		return MaxValue // sqrt(1) = 1
 	}
-	
-	// For Q1.31 format where values are in [0,1), we need special handling
-	// sqrt(x) where x in [0,1) gives result in [0,1)
-	// We'll use integer square root on the scaled value
-	
-	// Convert to uint64 for integer sqrt, scale up to preserve precision
-	// Q1.31 * 2^31 = full 62-bit value for sqrt
+
+	// val is the raw Q1.31 integer representation
 	val := uint64(q)
-	if val == 0 {
-		return Zero
-	}
-	
-	// Scale up by 2^31 to get full range, then take sqrt
-	// This gives us sqrt(val * 2^31) which we then need to scale back
+
+	// We want sqrt(q/2^31) expressed as Q1.31.
+	// In Q1.31: result = sqrt(val/2^31) * 2^31 = sqrt(val * 2^31) = isqrt(val << 31).
+	// Compute val << 31 carefully to avoid overflow (val < 2^31, so val<<31 < 2^62, fits uint64).
 	scaled := val << 31
-	
-	// Integer square root using Newton-Raphson
-	x := scaled
-	for i := 0; i < 20; i++ {
-		if x == 0 {
-			break
-		}
+
+	// Use a good initial estimate: start near sqrt(val) using bit-length.
+	// Find the most significant bit of val to get a close initial estimate.
+	x := uint64(1)
+	for x*x < val {
+		x <<= 1
+	}
+	// x is now >= sqrt(val), refine with Newton-Raphson on scaled
+	// Re-initialize x as an estimate for sqrt(scaled)
+	x = x << 16 // x ~ sqrt(val) * 2^16, which approximates sqrt(val << 31) since 2^16 ~ 2^15.5
+	for {
 		xNext := (x + scaled/x) >> 1
 		if xNext >= x {
 			break
 		}
 		x = xNext
 	}
-	
-	// Result is sqrt(val * 2^31) = sqrt(val) * 2^15.5
-	// We need sqrt(val) * 2^31, so multiply by 2^15.5
-	// Since we can't do fractional shifts, approximate
-	result := x * 46341 / 65536 // 46341/65536 ≈ sqrt(2)/2 ≈ 0.707
-	
+
 	// Clamp to valid Q1.31 range
-	if result > uint64(MaxValue) {
+	if x > uint64(MaxValue) {
 		return MaxValue
 	}
-	
-	return Q131(result)
+
+	return Q131(x)
 }
 
 // Exp computes e^q using Taylor series expansion.
@@ -204,20 +198,20 @@ func (q Q131) Sqrt() Q131 {
 func (q Q131) Exp() Q131 {
 	// e^x = 1 + x + x^2/2! + x^3/3! + ...
 	// Compute first 15 terms for sufficient precision
-	
+
 	result := One
 	term := One
-	
+
 	for n := 1; n <= 15; n++ {
 		term = term.Mul(q).Div(FromFloat64(float64(n)))
 		result = result.Add(term)
-		
+
 		// Early termination if term becomes negligible
 		if term.Abs() <= Epsilon {
 			break
 		}
 	}
-	
+
 	return result
 }
 
@@ -227,31 +221,31 @@ func (q Q131) Ln() Q131 {
 	if q <= Zero {
 		return MinValue // ln(0) = -inf
 	}
-	
+
 	// Use ln(x) = 2 * atanh((x-1)/(x+1)) for better convergence
 	numerator := q.Sub(One)
 	denominator := q.Add(One)
-	
+
 	if denominator == Zero {
 		return Zero
 	}
-	
+
 	z := numerator.Div(denominator)
-	
+
 	// atanh(z) = z + z^3/3 + z^5/5 + z^7/7 + ...
 	result := Zero
 	zSquared := z.Mul(z)
 	term := z
-	
+
 	for n := 1; n <= 15; n += 2 {
 		result = result.Add(term.Div(FromFloat64(float64(n))))
 		term = term.Mul(zSquared)
-		
+
 		if term.Abs() <= Epsilon {
 			break
 		}
 	}
-	
+
 	// Multiply by 2
 	return result.Add(result)
 }
@@ -296,7 +290,7 @@ func (v Vector) Add(other Vector) Vector {
 	if len(v) != len(other) {
 		panic("vector dimension mismatch")
 	}
-	
+
 	result := make(Vector, len(v))
 	for i := range v {
 		result[i] = v[i].Add(other[i])
@@ -309,7 +303,7 @@ func (v Vector) Mul(other Vector) Vector {
 	if len(v) != len(other) {
 		panic("vector dimension mismatch")
 	}
-	
+
 	result := make(Vector, len(v))
 	for i := range v {
 		result[i] = v[i].Mul(other[i])
@@ -322,7 +316,7 @@ func (v Vector) Dot(other Vector) Q131 {
 	if len(v) != len(other) {
 		panic("vector dimension mismatch")
 	}
-	
+
 	result := Zero
 	for i := range v {
 		result = result.Add(v[i].Mul(other[i]))
@@ -364,17 +358,17 @@ func NewMatrix(values [][]float64) *Matrix {
 	if len(values) == 0 {
 		return &Matrix{Rows: 0, Cols: 0, Data: []Q131{}}
 	}
-	
+
 	rows := len(values)
 	cols := len(values[0])
 	data := make([]Q131, rows*cols)
-	
+
 	for i := 0; i < rows; i++ {
 		for j := 0; j < cols; j++ {
 			data[i*cols+j] = FromFloat64(values[i][j])
 		}
 	}
-	
+
 	return &Matrix{
 		Rows: rows,
 		Cols: cols,
@@ -397,13 +391,13 @@ func (m *Matrix) Mul(other *Matrix) *Matrix {
 	if m.Cols != other.Rows {
 		panic("matrix dimension mismatch")
 	}
-	
+
 	result := &Matrix{
 		Rows: m.Rows,
 		Cols: other.Cols,
 		Data: make([]Q131, m.Rows*other.Cols),
 	}
-	
+
 	for i := 0; i < m.Rows; i++ {
 		for j := 0; j < other.Cols; j++ {
 			sum := Zero
@@ -413,7 +407,7 @@ func (m *Matrix) Mul(other *Matrix) *Matrix {
 			result.Set(i, j, sum)
 		}
 	}
-	
+
 	return result
 }
 
