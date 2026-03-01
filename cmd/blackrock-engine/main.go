@@ -244,26 +244,26 @@ func (bre *BlackRockEngine) ExportReports() {
 	// DCG Report
 	dcgReport := bre.dcg.ExportValidationReport()
 	dcgJSON, _ := json.MarshalIndent(dcgReport, "", "  ")
-	os.WriteFile("dcg_report.json", dcgJSON, 0644)
+	_ = os.WriteFile("dcg_report.json", dcgJSON, 0644)
 	
 	// SAT Guard Report
 	satReport := bre.satGuard.ExportAuditTrail()
 	satJSON, _ := json.MarshalIndent(satReport, "", "  ")
-	os.WriteFile("satguard_report.json", satJSON, 0644)
+	_ = os.WriteFile("satguard_report.json", satJSON, 0644)
 	
 	// AHS Report
 	ahsReport := bre.ahsEngine.ExportCalculationReport()
 	ahsJSON, _ := json.MarshalIndent(ahsReport, "", "  ")
-	os.WriteFile("ahs_report.json", ahsJSON, 0644)
+	_ = os.WriteFile("ahs_report.json", ahsJSON, 0644)
 	
 	// AxiomShard Report
 	shardReport := bre.shardChain.ExportComplianceReport()
 	shardJSON, _ := json.MarshalIndent(shardReport, "", "  ")
-	os.WriteFile("axiomshard_report.json", shardJSON, 0644)
+	_ = os.WriteFile("axiomshard_report.json", shardJSON, 0644)
 	
 	// Full shard chain
 	shardChainJSON, _ := bre.shardChain.ExportToJSON()
-	os.WriteFile("shard_chain.json", []byte(shardChainJSON), 0644)
+	_ = os.WriteFile("shard_chain.json", []byte(shardChainJSON), 0644)
 	
 	log.Println("Reports exported successfully")
 }
@@ -292,7 +292,8 @@ func main() {
 	fmt.Println("Axiom Hive Deterministic Framework")
 	fmt.Println("Compliance ID:", ComplianceID)
 	fmt.Println("Version:", Version)
-	fmt.Println("=================================================\n")
+	fmt.Println("=================================================")
+	fmt.Println()
 	
 	// Demonstrate Q1.31 determinism
 	DemonstrateQ131Determinism()
@@ -301,7 +302,9 @@ func main() {
 	engine := NewBlackRockEngine()
 	engine.Initialize()
 	
-	fmt.Println("\n=== Pipeline Demonstration ===\n")
+	fmt.Println()
+	fmt.Println("=== Pipeline Demonstration ===")
+	fmt.Println()
 	
 	// Example 1: Portfolio Optimization
 	engine.ExecuteCalculation(
