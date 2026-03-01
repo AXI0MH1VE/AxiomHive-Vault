@@ -136,8 +136,7 @@ This project maintains compliance with:
 
 ## Contact
 
-Security Team: security@axiom_hive_xpii.com
-PGP Key: [Add your PGP key fingerprint if available]
+Security Team: aciomhive@gmail.com
 
 ---
 
