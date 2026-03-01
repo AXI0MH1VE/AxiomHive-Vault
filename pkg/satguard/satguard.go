@@ -269,14 +269,14 @@ func (sg *SATGuard) verifyInvariant(invariant string, proposal ActionProposal) b
 
 // generateLogicReceipt creates a human-readable explanation of the decision.
 func (sg *SATGuard) generateLogicReceipt(proposal ActionProposal, p, c, a, h bool) string {
-	receipt := fmt.Sprintf("SAT Guard Logic Receipt\n")
-	receipt += fmt.Sprintf("========================\n")
+	receipt := "SAT Guard Logic Receipt\n"
+	receipt += "========================\n"
 	receipt += fmt.Sprintf("Action: %s\n", proposal.Action)
 	receipt += fmt.Sprintf("Target: %s\n", proposal.Target)
 	receipt += fmt.Sprintf("Requester: %s\n", proposal.Requester)
 	receipt += fmt.Sprintf("Timestamp: %s\n\n", proposal.Timestamp.Format(time.RFC3339))
 	
-	receipt += fmt.Sprintf("Validation Results:\n")
+	receipt += "Validation Results:\n"
 	receipt += fmt.Sprintf("  Proposal Valid (P): %v\n", p)
 	receipt += fmt.Sprintf("  Conditions Met (C): %v\n", c)
 	receipt += fmt.Sprintf("  Authorized (A): %v\n", a)

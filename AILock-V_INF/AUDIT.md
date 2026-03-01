@@ -2,7 +2,7 @@
  "protocol_state": "P_Flawless (v1.0.0-INIT)",
  "genesis_time": "2025-10-20T23:34:00Z",
  "project_id": "AILock-V_INF",
- "source_domain": "https://github.com/AXI0MH1VE/AILock",
+ "source_domain": "https://github.com/AxiomHiveXPII/AILock",
  "protocol_directives": [
  {
  "id": "P_Null",

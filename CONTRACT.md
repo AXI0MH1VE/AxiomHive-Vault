@@ -19,7 +19,7 @@ Enhancements in the Go proxy include:
 - Comprehensive governance, authentication, and authorization checks.
 - License verification gating `/api/v1/strategic/wealth` with denial logged if inactive.
 - On successful license validation, autonomous wealth generation is initiated with immutable logging.
-- Explicit payout confirmation added in the response to the operator's BTC address: **bc1qw4exe0qvetqwdfyh2m6d58uqrgea5dke3wlc82** (owned by Alexis Adams).
+- Explicit payout confirmation added in the response to the operator's BTC address: **bc1qw4exe0qvetqwdfyh2m6d58uqrgea5dke3wlc82** (owned by Nicholas Michael Grossi).
 - Other API requests follow the Absolute Operational Integrity (AOI) policy with audit trail proofs logged.
 - Boot sequence logs activation status of the IWK license for operational transparency.
 

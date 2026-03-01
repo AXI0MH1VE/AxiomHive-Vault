@@ -28,7 +28,7 @@ This document specifies comprehensive integration tests for the BlackRock Implem
  "expected_returns": [8.5, 12.3, 6.7, 15.2],
  "risk_tolerance": 0.05
  },
- "requester": "alexis.adams@axiomhive.com",
+ "requester": "nicholas.grossi@axiom_hive_xpii.com",
  "timestamp": "2026-01-18T12:00:00Z"
 }
 ```
@@ -82,7 +82,7 @@ This document specifies comprehensive integration tests for the BlackRock Implem
  "confidence_level": 0.95,
  "volatility": 0.15
  },
- "requester": "alexis.adams@axiomhive.com",
+ "requester": "nicholas.grossi@axiom_hive_xpii.com",
  "timestamp": "2026-01-18T12:01:00Z"
 }
 ```
@@ -127,7 +127,7 @@ This document specifies comprehensive integration tests for the BlackRock Implem
  "ask_prices": [100.7, 101.5, 100.1],
  "volumes": [10000, 15000, 8000]
  },
- "requester": "alexis.adams@axiomhive.com",
+ "requester": "nicholas.grossi@axiom_hive_xpii.com",
  "timestamp": "2026-01-18T12:02:00Z"
 }
 ```
@@ -369,7 +369,7 @@ This document specifies comprehensive integration tests for the BlackRock Implem
 **Authorization Database:**
 ```json
 {
- "alexis.adams@axiomhive.com": {
+ "nicholas.grossi@axiom_hive_xpii.com": {
  "roles": ["admin", "trader"],
  "permissions": ["action:*"],
  "level": 10
@@ -419,7 +419,7 @@ This document specifies comprehensive integration tests for the BlackRock Implem
  "quantity": 1000,
  "price": 150.0
  },
- "requester": "alexis.adams@axiomhive.com",
+ "requester": "nicholas.grossi@axiom_hive_xpii.com",
  "timestamp": "2026-01-18T12:00:00Z"
 }
 ```
@@ -445,7 +445,7 @@ This document specifies comprehensive integration tests for the BlackRock Implem
 {
  "decision": "DENY",
  "formula": "P(true) ∧ C(true) ∧ A(true) ∧ H(false) = false",
- "logic_receipt": "SAT Guard Logic Receipt\n========================\nAction: execute_trade\nTarget: UNREGISTERED_EXCHANGE\nRequester: alexis.adams@axiomhive.com\n\nValidation Results:\n Proposal Valid (P): true\n Conditions Met (C): true\n Authorized (A): true\n Hamiltonian Safe (H): false\n\n [FAIL] Action would lead to unsafe state (Hamiltonian violation)\n\n ✗ Constraints violated - Action DENIED",
+ "logic_receipt": "SAT Guard Logic Receipt\n========================\nAction: execute_trade\nTarget: UNREGISTERED_EXCHANGE\nRequester: nicholas.grossi@axiom_hive_xpii.com\n\nValidation Results:\n Proposal Valid (P): true\n Conditions Met (C): true\n Authorized (A): true\n Hamiltonian Safe (H): false\n\n [FAIL] Action would lead to unsafe state (Hamiltonian violation)\n\n ✗ Constraints violated - Action DENIED",
  "proposal_id": "TEST_SAT_002",
  "timestamp": "2026-01-18T12:00:00Z"
 }
@@ -480,7 +480,7 @@ SetGlobalKillSwitch(true)
  "parameters": {
  "expected_returns": [8.5, 12.3, 6.7, 15.2]
  },
- "requester": "alexis.adams@axiomhive.com",
+ "requester": "nicholas.grossi@axiom_hive_xpii.com",
  "timestamp": "2026-01-18T12:00:00Z"
 }
 ```

@@ -38,10 +38,10 @@ import (
 	"time"
 
 	// Internal packages (to be implemented)
-	// "github.com/AXI0MH1VE/AILock/internal/api"
-	// "github.com/AXI0MH1VE/AILock/internal/config"
-	// "github.com/AXI0MH1VE/AILock/internal/database"
-	// "github.com/AXI0MH1VE/AILock/internal/logger"
+	// "github.com/AxiomHiveXPII/AILock/internal/api"
+	// "github.com/AxiomHiveXPII/AILock/internal/config"
+	// "github.com/AxiomHiveXPII/AILock/internal/database"
+	// "github.com/AxiomHiveXPII/AILock/internal/logger"
 )
 
 const (

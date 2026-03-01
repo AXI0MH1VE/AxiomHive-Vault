@@ -58,4 +58,4 @@ The project is terminated. Execution now belongs solely to the harness.
 
 ---
 
-**Final Engine State:** Ready for next instruction from Alexis Adams.
+**Final Engine State:** Ready for next instruction from Nicholas Michael Grossi.

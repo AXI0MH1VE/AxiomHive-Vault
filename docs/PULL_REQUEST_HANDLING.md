@@ -9,7 +9,7 @@ This document outlines the complete pull request workflow, review process, merge
 1. **Fork the Repository**
  - Create a personal fork of the AILock repository
  - Clone your fork locally: `git clone https://github.com/YOUR_USERNAME/AILock.git`
- - Add upstream remote: `git remote add upstream https://github.com/AXI0MH1VE/AILock.git`
+ - Add upstream remote: `git remote add upstream https://github.com/AxiomHiveXPII/AILock.git`
 
 2. **Create a Feature Branch**
  - Always branch from `main`: `git checkout main && git pull upstream main`

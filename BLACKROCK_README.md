@@ -18,7 +18,7 @@ This directory contains the complete implementation of the **BlackRock Implement
 ## Directory Structure
 
 ```
-AxiomHive-Vault/
+AxiomHiveXPII-Vault/
 ├── pkg/
 │ ├── q131/ # Q1.31 fixed-point arithmetic
 │ │ ├── q131.go
@@ -52,7 +52,7 @@ AxiomHive-Vault/
 
 ```bash
 # Clone repository
-git clone https://github.com/AXI0MH1VE/AILock.git
+git clone https://github.com/AxiomHiveXPII/AILock.git
 cd AILock
 
 # Install dependencies
@@ -104,7 +104,7 @@ Zero-entropy guarantee:
 ### 1. Q1.31 Fixed-Point Arithmetic
 
 ```go
-import "github.com/AXI0MH1VE/AILock/pkg/q131"
+import "github.com/AxiomHiveXPII/AILock/pkg/q131"
 
 // Create Q1.31 values
 a := q131.FromFloat64(0.5)
@@ -126,7 +126,7 @@ hash := result.Hash() // SHA-256 hash for verification
 ### 2. Deterministic Coherence Gate (DCG)
 
 ```go
-import "github.com/AXI0MH1VE/AILock/pkg/dcg"
+import "github.com/AxiomHiveXPII/AILock/pkg/dcg"
 
 // Create DCG with strict mode and zero tolerance
 gate := dcg.NewDCG(true, true)
@@ -151,7 +151,7 @@ if !result.Valid {
 ### 3. SAT Guards
 
 ```go
-import "github.com/AXI0MH1VE/AILock/pkg/satguard"
+import "github.com/AxiomHiveXPII/AILock/pkg/satguard"
 
 // Create SAT Guard
 guard := satguard.NewSATGuard(true)
@@ -177,7 +177,7 @@ if result.Decision != "ALLOW" {
 ### 4. AxiomShard Audit Logging
 
 ```go
-import "github.com/AXI0MH1VE/AILock/pkg/axiomshard"
+import "github.com/AxiomHiveXPII/AILock/pkg/axiomshard"
 
 // Create shard chain
 chain := axiomshard.NewShardChain("OMEGA-7N-RCSM-001")
@@ -202,7 +202,7 @@ report := chain.ExportComplianceReport()
 ### 5. Monument Protocol Generator
 
 ```go
-import "github.com/AXI0MH1VE/AILock/pkg/monument"
+import "github.com/AxiomHiveXPII/AILock/pkg/monument"
 
 // Create protocol builder
 builder := monument.NewProtocolBuilder("OMEGA-7N-RCSM-001")
@@ -230,7 +230,7 @@ report := builder.ExecuteProtocol(protocol.ProtocolID, data)
 ### 6. AHS Calculation Engine
 
 ```go
-import "github.com/AXI0MH1VE/AILock/pkg/ahs"
+import "github.com/AxiomHiveXPII/AILock/pkg/ahs"
 
 // Create AHS engine
 engine := ahs.NewAHSEngine("OMEGA-7N-RCSM-001")
@@ -433,10 +433,10 @@ See `cmd/blackrock-engine/main.go` for complete examples:
 
 ## Contact
 
-**Operator:** Alexis M. Adams 
-**Organization:** AXI0MH1VE Authority Kernel 
+**Operator:** Nicholas Michael Grossi
+**Organization:** AxiomHiveXPII Authority Kernel
 **Compliance ID:** OMEGA-7N-RCSM-001 
-**Repository:** https://github.com/AXI0MH1VE/AILock
+**Repository:** https://github.com/AxiomHiveXPII/AILock
 
 ---
 

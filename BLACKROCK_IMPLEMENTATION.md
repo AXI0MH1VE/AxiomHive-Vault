@@ -4,7 +4,7 @@
 **Compliance ID:** OMEGA-7N-RCSM-001 
 **Version:** 1.0.0 
 **Implementation Date:** January 18, 2026 
-**Operator:** Alexis M. Adams | AXI0MH1VE Authority Kernel
+**Operator:** Nicholas Michael Grossi | AxiomHiveXPII Authority Kernel
 
 ---
 
@@ -167,7 +167,7 @@ Genesis Hash → Shard₀ → Shard₁ → Shard₂ → ... → Shardₙ
  "shard_id": "unique_identifier",
  "timestamp": "2026-01-18T12:00:00Z",
  "event_type": "CALCULATION",
- "actor": "alexis.adams@axiomhive.com",
+ "actor": "nicholas.grossi@axiom_hive_xpii.com",
  "action": "portfolio_optimization",
  "input": {...},
  "output": {...},
@@ -332,7 +332,7 @@ All calculations produce identical SHA-256 hashes when repeated, enabling crypto
 
 **Implementation:**
 - Global kill switch instantly halts all actions
-- Sole Key Holder authority (Alexis M. Adams)
+- Sole Key Holder authority (Nicholas Michael Grossi)
 - Human override events logged to AxiomShard
 - Tool-in-Hand Mandate: user commands override model training
 
@@ -562,7 +562,7 @@ engine.ExecuteCalculation(
  "expected_returns": []float64{8.5, 12.3, 6.7, 15.2},
  "risk_tolerance": 0.05,
  },
- "alexis.adams@axiomhive.com",
+ "nicholas.grossi@axiom_hive_xpii.com",
 )
 ```
 
@@ -585,7 +585,7 @@ engine.ExecuteCalculation(
  "confidence_level": 0.95,
  "volatility": 0.15,
  },
- "alexis.adams@axiomhive.com",
+ "nicholas.grossi@axiom_hive_xpii.com",
 )
 ```
 
@@ -609,7 +609,7 @@ engine.ExecuteCalculation(
  "ask_prices": []float64{100.7, 101.5, 100.1},
  "volumes": []float64{10000, 15000, 8000},
  },
- "alexis.adams@axiomhive.com",
+ "nicholas.grossi@axiom_hive_xpii.com",
 )
 ```
 
@@ -723,11 +723,11 @@ The architecture replaces dependency on cloud-based services with private, deter
 
 ## Contact Information
 
-**Operator:** Alexis M. Adams 
-**Organization:** AXI0MH1VE Authority Kernel 
+**Operator:** Nicholas Michael Grossi
+**Organization:** AxiomHiveXPII Authority Kernel
 **Compliance ID:** OMEGA-7N-RCSM-001 
 **BTC Address:** bc1qw4exe0qvetqwdfyh2m6d58uqrgea5dke3wlc82 
-**Repository:** https://github.com/AXI0MH1VE/AILock
+**Repository:** https://github.com/AxiomHiveXPII/AILock
 
 ---
 

@@ -5,7 +5,7 @@
 set -e
 
 # Configuration
-GITHUB_REPO="AXI0MH1VE/AILock"
+GITHUB_REPO="AxiomHiveXPII/AILock"
 GITHUB_URL="https://github.com/$GITHUB_REPO.git"
 BRANCH="main"
 
@@ -287,7 +287,7 @@ Immutable destination for autonomous wealth kernel payouts.
 
 **Status**: Production-Ready
 **Last Updated**: November 1, 2025
-**Maintainer**: Alexis Adams / AXI0MH1VE
+**Maintainer**: Nicholas Michael Grossi / AxiomHiveXPII
 EOF
         log_success "README.md created"
     else

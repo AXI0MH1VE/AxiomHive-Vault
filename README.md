@@ -1,4 +1,4 @@
-# AxiomHive Vault: BlackRock Implementation Architecture
+# AxiomHiveXPII Vault: BlackRock Implementation Architecture
 
 **Deterministic Financial Calculation Engine with Axiom Hive Framework**
 
@@ -8,7 +8,7 @@
 
 ## Overview
 
-**AxiomHive Vault** implements the **BlackRock Implementation Architecture**, a deterministic financial calculation engine that achieves zero-entropy guarantees through structural impossibility principles. The system transitions from probabilistic AI to deterministic operations, ensuring mathematical certainty in all financial calculations.
+**AxiomHiveXPII Vault** implements the **BlackRock Implementation Architecture**, a deterministic financial calculation engine that achieves zero-entropy guarantees through structural impossibility principles. The system transitions from probabilistic AI to deterministic operations, ensuring mathematical certainty in all financial calculations.
 
 ### Key Features
 
@@ -192,8 +192,8 @@ Shard[i].previousHash = Shard[i-1].hash
 
 ```bash
 # Clone repository
-git clone https://github.com/AXI0MH1VE/AxiomHive-Vault.git
-cd AxiomHive-Vault
+git clone https://github.com/AxiomHiveXPII/AxiomHiveXPII-Vault.git
+cd AxiomHiveXPII-Vault
 
 # Install dependencies
 go mod tidy
@@ -216,7 +216,7 @@ Create `config.yaml`:
 
 ```yaml
 compliance_id: "OMEGA-7N-RCSM-001"
-operator: "alexis.adams@axiomhive.com"
+operator: "nicholas.grossi@axiom_hive_xpii.com"
 btc_address: "bc1qw4exe0qvetqwdfyh2m6d58uqrgea5dke3wlc82"
 
 dcg:
@@ -233,9 +233,34 @@ satguard:
  - "calculate:liquidity_gap"
 
 axiomshard:
- chain_file: "/var/axiomhive/audit_chain.json"
+ chain_file: "/var/axiom_hive_xpii/audit_chain.json"
  genesis_hash: "OMEGA-7N-RCSM-001-GENESIS"
 ```
+
+### Usage Examples
+
+You can run the engine in different modes to validate calculations:
+
+```bash
+# Run a portfolio optimization calculation
+./blackrock-engine --mode=optimize --config=config.yaml
+
+# Run Value at Risk (VaR) calculation
+./blackrock-engine --mode=var --config=config.yaml
+```
+
+### API and Command References
+
+**CLI Commands:**
+* `--mode`: The mode of the engine (e.g., `optimize`, `var`).
+* `--config`: Path to the YAML configuration file.
+
+### Troubleshooting
+
+**Common Issues:**
+* **`blackrock-engine: command not found`**: Ensure you have successfully compiled the binary with `go build -o blackrock-engine ./cmd/blackrock-engine/` and that you are executing it from the correct directory.
+* **`invalid config file`**: Double-check that your `config.yaml` is syntactically valid YAML and that the path you passed to `--config` is correct.
+* **`SAT Guard failed`**: This indicates an attempted unsafe operation. Check your application's input state against the registered `safe_states` in the configuration.
 
 ---
 
@@ -338,8 +363,8 @@ See [LICENSE](LICENSE) for details.
 
 ## Operator
 
-**Name:** Alexis Adams 
-**Email:** alexis.adams@axiomhive.com 
+**Name:** Nicholas Michael Grossi
+**Email:** nicholas.grossi@axiom_hive_xpii.com
 **BTC Address:** `bc1qw4exe0qvetqwdfyh2m6d58uqrgea5dke3wlc82` 
 **Compliance ID:** OMEGA-7N-RCSM-001
 
@@ -348,7 +373,7 @@ See [LICENSE](LICENSE) for details.
 ## Repository Structure
 
 ```
-AxiomHive-Vault/
+AxiomHiveXPII-Vault/
 ├── pkg/
 │ ├── q131/ # Q1.31 fixed-point arithmetic
 │ ├── dcg/ # Deterministic Coherence Gate
@@ -377,8 +402,8 @@ AxiomHive-Vault/
 
 For questions, issues, or contributions:
 
-- **GitHub Issues:** https://github.com/AXI0MH1VE/AxiomHive-Vault/issues
-- **Email:** alexis.adams@axiomhive.com
+- **GitHub Issues:** https://github.com/AxiomHiveXPII/AxiomHiveXPII-Vault/issues
+- **Email:** nicholas.grossi@axiom_hive_xpii.com
 - **Compliance ID:** OMEGA-7N-RCSM-001
 
 ---

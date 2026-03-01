@@ -4,7 +4,7 @@
 
 **DO NOT** open public issues for security vulnerabilities.
 
-To report a security issue, please email: **security@axiomhive.com** (or your preferred contact)
+To report a security issue, please email: **security@axiom_hive_xpii.com** (or your preferred contact)
 
 Include:
 - Description of the vulnerability
@@ -136,7 +136,7 @@ This project maintains compliance with:
 
 ## Contact
 
-Security Team: security@axiomhive.com 
+Security Team: security@axiom_hive_xpii.com
 PGP Key: [Add your PGP key fingerprint if available]
 
 ---

@@ -291,7 +291,7 @@ func applyEnvOverrides(cfg *Config) {
 		cfg.IWK.PayoutInvariant = val
 	}
 	if val := os.Getenv("AILOCK_SERVER_PORT"); val != "" {
-		fmt.Sscanf(val, "%d", &cfg.Server.ListenPort)
+		_, _ = fmt.Sscanf(val, "%d", &cfg.Server.ListenPort)
 	}
 	if val := os.Getenv("AILOCK_DB_URI"); val != "" {
 		cfg.Database.URI = val

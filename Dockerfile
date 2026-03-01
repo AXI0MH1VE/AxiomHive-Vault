@@ -1,5 +1,5 @@
 # AILock Dockerfile - Phase 2
-FROM golang:1.21-alpine AS builder
+FROM golang:1.23-alpine AS builder
 
 # Install build dependencies
 RUN apk add --no-cache git
@@ -7,7 +7,7 @@ RUN apk add --no-cache git
 WORKDIR /app
 
 # Copy go mod files
-COPY go.mod go.work ./
+COPY go.mod go.sum ./
 
 # Download dependencies
 RUN go mod download
@@ -19,7 +19,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ailock-api ./cmd/ailock-api
 
 # Final stage
-FROM alpine:latest
+FROM alpine:3.19
 
 RUN apk --no-cache add ca-certificates
 

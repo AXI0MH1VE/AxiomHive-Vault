@@ -100,7 +100,7 @@ This comprehensive guide covers:
 
 2. **Add upstream remote**:
  ```bash
- git remote add upstream https://github.com/AXI0MH1VE/AILock.git
+ git remote add upstream https://github.com/AxiomHiveXPII/AILock.git
  ```
 
 3. **Install dependencies**:

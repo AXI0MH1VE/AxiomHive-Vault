@@ -1,7 +1,7 @@
 {
   "unified_deployment_package_id": "ACEP-UDP-AILOCK-20251020",
   "version": "1.0.0-FINAL",
-  "operator_authority": "Alexis Adams",
+  "operator_authority": "Nicholas Michael Grossi",
   
   "attestation_schema": "SHA256-Merkle-Root",
   "attestation_merkle_root": "0x4A6B9D2C...[CRYPTOGRAPHICALLY_SIGNED_HASH_OF_ALL_ARTIFACTS]",

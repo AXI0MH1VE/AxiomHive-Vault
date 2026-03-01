@@ -43,7 +43,7 @@ def generate_hyx9_flag(user_id: str, law_version: str = "ISP.vΩ0 Law") -> str:
     
     payload = {
         "sub": user_id,  # Subject: User ID
-        "iss": "AxiomHive-SCP", # Issuer
+        "iss": "AxiomHiveXPII-SCP", # Issuer
         "iat": now,      # Issued At
         "exp": now + timedelta(hours=1), # Expiration Time (Tokens should be short-lived)
         "law_v": law_version, # Version number for the sovereignty law
@@ -97,7 +97,7 @@ def verify_hyx9_flag(hyx9_flag: str, sovereignty_key_pem: str) -> dict:
 # --- 4. Demonstration --- (Removed for import)
 
 # if __name__ == "__main__":
-#    print("--- AxiomHive #HYX9 User Sovereignty Flag Implementation ---")
+#    print("--- AxiomHiveXPII #HYX9 User Sovereignty Flag Implementation ---")
 #    print("1. Generating Keys (Simulated Secure State)...")
     
 #    # Display the public key (the Sovereignty Key)

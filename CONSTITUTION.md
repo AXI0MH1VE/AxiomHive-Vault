@@ -84,4 +84,4 @@ The system shall operate with the utmost respect for user privacy, adhering to a
 
 ## Reference
 
-For the full constitution repository and updates, see: [AI-Constitution-CDA](https://github.com/AXI0MH1VE/AI-Constitution-CDA)
+For the full constitution repository and updates, see: [AI-Constitution-CDA](https://github.com/AxiomHiveXPII/AI-Constitution-CDA)

@@ -5,7 +5,7 @@ This file operationalizes the mathematically invariant AILock policy. It must be
 
 | ComplianceID | TargetTCOMetric | IWK_LICENSE_ACTIVE | InvariantPaths | MaxRequestsPerSecond | JWKS_Endpoint |
 |--------------|-----------------|-------------------|----------------|----------------------|---------------|
-| OMEGA-7N-RCSM-001 | $1,460,000,000,000.00 | true | `/api/v1/invariant/status`, `/api/v1/auth/execute`, `/api/v1/financial/ledger`, `/api/v1/strategic/wealth` | 5 | `https://auth.axiomhive.com/keys` |
+| OMEGA-7N-RCSM-001 | $1,460,000,000,000.00 | true | `/api/v1/invariant/status`, `/api/v1/auth/execute`, `/api/v1/financial/ledger`, `/api/v1/strategic/wealth` | 5 | `https://auth.axiom_hive_xpii.com/keys` |
 
 ### Field Descriptions
 
