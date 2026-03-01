@@ -1,4 +1,4 @@
-module github.com/AXI0MH1VE/AILock
+module github.com/AxiomHiveXPII/AILock
 
 go 1.23
 

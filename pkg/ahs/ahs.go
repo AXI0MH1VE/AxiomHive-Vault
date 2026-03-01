@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"time"
 	
-	"github.com/AXI0MH1VE/AILock/pkg/q131"
+	"github.com/AxiomHiveXPII/AILock/pkg/q131"
 )
 
 // CalculationRequest represents a request for financial calculation.

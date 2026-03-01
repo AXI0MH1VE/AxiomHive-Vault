@@ -9,12 +9,12 @@ import (
 	"os"
 	"time"
 	
-	"github.com/AXI0MH1VE/AILock/pkg/ahs"
-	"github.com/AXI0MH1VE/AILock/pkg/axiomshard"
-	"github.com/AXI0MH1VE/AILock/pkg/dcg"
-	"github.com/AXI0MH1VE/AILock/pkg/monument"
-	"github.com/AXI0MH1VE/AILock/pkg/q131"
-	"github.com/AXI0MH1VE/AILock/pkg/satguard"
+	"github.com/AxiomHiveXPII/AILock/pkg/ahs"
+	"github.com/AxiomHiveXPII/AILock/pkg/axiomshard"
+	"github.com/AxiomHiveXPII/AILock/pkg/dcg"
+	"github.com/AxiomHiveXPII/AILock/pkg/monument"
+	"github.com/AxiomHiveXPII/AILock/pkg/q131"
+	"github.com/AxiomHiveXPII/AILock/pkg/satguard"
 )
 
 const (
@@ -77,7 +77,7 @@ func (bre *BlackRockEngine) Initialize() {
 	
 	// Register SAT Guard authorizations
 	bre.satGuard.RegisterAuthorization(satguard.Authorization{
-		UserID:      "alexis.adams@axiomhive.com",
+		UserID:      "nicholas.grossi@axiom_hive_xpii.com",
 		Roles:       []string{"admin", "trader"},
 		Permissions: []string{"action:*"},
 		Level:       10,
@@ -310,7 +310,7 @@ func main() {
 			"expected_returns": []float64{8.5, 12.3, 6.7, 15.2},
 			"risk_tolerance":   0.05,
 		},
-		"alexis.adams@axiomhive.com",
+		"nicholas.grossi@axiom_hive_xpii.com",
 	)
 	
 	// Example 2: VaR Calculation
@@ -321,7 +321,7 @@ func main() {
 			"confidence_level": 0.95,
 			"volatility":       0.15,
 		},
-		"alexis.adams@axiomhive.com",
+		"nicholas.grossi@axiom_hive_xpii.com",
 	)
 	
 	// Example 3: Liquidity Gap Analysis
@@ -332,11 +332,11 @@ func main() {
 			"ask_prices": []float64{100.7, 101.5, 100.1},
 			"volumes":    []float64{10000, 15000, 8000},
 		},
-		"alexis.adams@axiomhive.com",
+		"nicholas.grossi@axiom_hive_xpii.com",
 	)
 	
 	// Example 4: Trade Execution
-	// engine.ExecuteTrade("AAPL", 1000, 150.25, "alexis.adams@axiomhive.com")
+	// engine.ExecuteTrade("AAPL", 1000, 150.25, "nicholas.grossi@axiom_hive_xpii.com")
 	
 	// Export compliance reports
 	engine.ExportReports()

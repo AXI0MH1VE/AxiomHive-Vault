@@ -5,7 +5,7 @@ October 21, 2025
 
 ## Declarant/Owner
 Axiom Hive / DevDollz Ai
-Nicholas M. Grossi ( Alexis M. Adams)
+Nicholas M. Grossi ( Nicholas Michael Grossi)
 1642 North East 1st Ave, Miami Fl 33132
 
 ## Intellectual Property Claim
@@ -53,7 +53,7 @@ I hereby declare and claim exclusive ownership and intellectual property rights 
 
 ## Public Records
 This declaration is filed in the following verifiable public records:
-- Committed to GitHub repository: https://github.com/AXI0MH1VE/AILock
+- Committed to GitHub repository: https://github.com/AxiomHiveXPII/AILock
 - Timestamped via Git commit hash: d6868d9 (Timestamp: October 21, 2025)
 - Notarized copy retained with legal counsel
 
@@ -64,5 +64,5 @@ This declaration is made under penalty of perjury and is maintained for legal pr
 
 ## Signature
 Nicholas M. Grossi
-Alexis M. Adams
+Nicholas Michael Grossi
 October 21, 2025

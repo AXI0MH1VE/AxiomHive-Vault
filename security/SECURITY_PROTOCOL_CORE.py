@@ -95,4 +95,4 @@ if __name__ == '__main__':
         "MFA_Method": "Hardware_Token",
         "11D_Context": test_context
     }
-    engine.enforce_user_centric_lockdown("Alexis_Adams_Primary_Agent", user_policy)
+    engine.enforce_user_centric_lockdown("Nicholas_Grossi_Primary_Agent", user_policy)

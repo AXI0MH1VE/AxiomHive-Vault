@@ -409,7 +409,7 @@ func (bre *BlackRockEngine) Initialize() {
 
  // Register SAT Guard authorizations
  bre.satGuard.RegisterAuthorization(satguard.Authorization{
- UserID: "alexis.adams@axiomhive.com", // Sole Key Holder
+ UserID: "nicholas.grossi@axiom_hive_xpii.com", // Sole Key Holder
  Roles: []string{"admin", "trader"},
  Permissions: []string{"action:*"}, // Full authority
  Level: 10,
@@ -1163,7 +1163,7 @@ Conclusion: ZERO ENTROPY
 ```json
 {
  "action": "any_action",
- "requester": "alexis.adams@axiomhive.com"
+ "requester": "nicholas.grossi@axiom_hive_xpii.com"
 }
 ```
 

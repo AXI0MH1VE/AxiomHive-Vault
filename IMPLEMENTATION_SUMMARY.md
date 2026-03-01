@@ -431,12 +431,12 @@ The **BlackRock Implementation Architecture** with **Axiom Hive Deterministic Fr
 
 ## Contact Information
 
-**Operator:** Alexis Adams 
-**Email:** alexis.adams@axiomhive.com 
+**Operator:** Nicholas Michael Grossi
+**Email:** nicholas.grossi@axiom_hive_xpii.com
 **BTC Address:** `bc1qw4exe0qvetqwdfyh2m6d58uqrgea5dke3wlc82` 
 **Compliance ID:** OMEGA-7N-RCSM-001
 
-**Repository:** https://github.com/AXI0MH1VE/AxiomHive-Vault
+**Repository:** https://github.com/AxiomHiveXPII/AxiomHiveXPII-Vault
 
 ---
 

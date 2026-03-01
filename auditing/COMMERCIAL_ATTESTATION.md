@@ -4,7 +4,7 @@
 
 **ISSUED TO:** [Client/Partner Entity Name]
 
-**ISSUED ON BEHALF OF:** Alexis Adams (The Agent)
+**ISSUED ON BEHALF OF:** Nicholas Michael Grossi (The Agent)
 
 **SYSTEM IDENTIFIER:** [Deployment ID/Version]
 
@@ -33,4 +33,4 @@ This document attests that the deployed system identified above is secured by th
 This MI-CERT is valid for a period of 12 months, subject to continuous validation via the **CFV Pipeline**. Any detected deviation from the cryptographic Merkle Root of the **Unified Deployment Package** automatically **revokes** this Attestation.
 
 **Seal of Absolute Operational Integrity:**
-*(Cryptographic Signature and Timestamp of Alexis Adams Authority)*
+*(Cryptographic Signature and Timestamp of Nicholas Michael Grossi Authority)*

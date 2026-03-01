@@ -68,7 +68,7 @@ AILock revolutionizes authentication with cutting-edge technologies that competi
 - Enterprise security budget allocations increasing 25% YoY
 - Compliance requirements (SOC2, NIST, GDPR) becoming mandatory
 
-### Go-to-Market Strategy: The Alexis Framework
+### Go-to-Market Strategy: The Nicholas Framework
 
 **Step 1: Viral Open Source Adoption**
 - Free, production-ready deployment for open-source projects
@@ -126,7 +126,7 @@ AILock revolutionizes authentication with cutting-edge technologies that competi
 
 ### Contact the Founders
 
-Ready to transform your security posture? Reach out to Alexis Adams and Nicholas Grossi at contact@ailock.com.
+Ready to transform your security posture? Reach out to Nicholas Michael Grossi at contact@ailock.com.
 
 ---
 
