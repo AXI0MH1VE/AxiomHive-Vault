@@ -7,7 +7,7 @@ RUN apk add --no-cache git
 WORKDIR /app
 
 # Copy go mod files
-COPY go.mod go.work ./
+COPY go.mod go.sum ./
 
 # Download dependencies
 RUN go mod download
