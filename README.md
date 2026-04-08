@@ -5,7 +5,7 @@
 > **[WARNING] SECURITY NOTICE:** This repository contains sensitive infrastructure code. **NEVER commit real credentials, API keys, or secrets.** Always use environment variables and the provided configuration templates. See [SECURITY.md](SECURITY.md) for complete security guidelines.
 
 ---
-
+**CREATED BY: NICHOLAS M. GROSSI**
 ## Overview
 
 **AxiomHiveXPII Vault** implements the **BlackRock Implementation Architecture**, a deterministic financial calculation engine that achieves zero-entropy guarantees through structural impossibility principles. The system transitions from probabilistic AI to deterministic operations, ensuring mathematical certainty in all financial calculations.
