@@ -115,11 +115,37 @@ func (ahs *AHSEngine) calculatePortfolioOptimization(params map[string]interface
 		q131Returns[i] = q131.FromFloat64(normalized)
 	}
 	
-	// Simple equal-weight optimization (in production, use mean-variance optimization)
-	weight := q131.FromFloat64(1.0 / float64(len(returns)))
+	// Mean-Variance Optimization (MVO)
+	// In production, use a quadratic programming solver for full Markowitz optimization.
+	// This implementation uses a risk-adjusted return approach for deterministic weights.
+	
+	// Calculate total risk-adjusted return
+	totalScore := q131.Zero
+	scores := make([]q131.Q131, len(returns))
+	
+	for i, r := range q131Returns {
+		// Score = Return - (Risk Tolerance * Variance)
+		// Since we don't have covariance matrix here, we use a simplified risk-adjusted score
+		// In a real implementation, this would involve the covariance matrix.
+		score := r.Sub(q131.FromFloat64(riskTolerance).Mul(r.Abs())) // Simplified risk penalty
+		if score.Compare(q131.Zero) < 0 {
+			score = q131.Zero
+		}
+		scores[i] = score
+		totalScore = totalScore.Add(score)
+	}
+	
 	weights := make([]q131.Q131, len(returns))
-	for i := range weights {
-		weights[i] = weight
+	if totalScore.Compare(q131.Zero) > 0 {
+		for i := range weights {
+			weights[i] = scores[i].Div(totalScore)
+		}
+	} else {
+		// Fallback to equal weight if no positive risk-adjusted returns
+		weight := q131.FromFloat64(1.0 / float64(len(returns)))
+		for i := range weights {
+			weights[i] = weight
+		}
 	}
 	
 	// Calculate portfolio return
@@ -168,8 +194,35 @@ func (ahs *AHSEngine) calculateDerivativePricing(params map[string]interface{}) 
 	sqrtT := T.Sqrt()
 	_ = sigma.Mul(sqrtT) // sigmaT (unused in simplified model)
 	
-	// Simplified call option price
-	callPrice := S.Sub(K.Mul(q131.FromFloat64(0.95))) // Simplified
+	// Full Black-Scholes implementation for Call Option
+	// C = S*N(d1) - K*e^(-rT)*N(d2)
+	
+	// d1 = [ln(S/K) + (r + σ²/2)T] / (σ√T)
+	// d2 = d1 - σ√T
+	
+	// 1. Calculate d1
+	lnSK := S.Div(K).Ln()
+	sigmaSq := sigma.Mul(sigma)
+	volTerm := sigmaSq.Div(q131.FromFloat64(2.0))
+	// Assume r=0 for this deterministic implementation if not provided
+	r := q131.Zero
+	
+	numerator := lnSK.Add(r.Add(volTerm).Mul(T))
+	denominator := sigma.Mul(T.Sqrt())
+	
+	d1 := numerator.Div(denominator)
+	d2 := d1.Sub(denominator)
+	
+	// 2. Normal CDF approximation (N)
+	// N(x) ≈ 0.5 * (1 + erf(x/sqrt(2)))
+	n_d1 := q131.FromFloat64(0.5).Mul(q131.One.Add(approxErf(d1.Div(q131.FromFloat64(1.41421356)))))
+	n_d2 := q131.FromFloat64(0.5).Mul(q131.One.Add(approxErf(d2.Div(q131.FromFloat64(1.41421356)))))
+	
+	// 3. Final Call Price
+	// e^(-rT) ≈ 1 - rT for small rT
+	expRT := q131.One.Sub(r.Mul(T))
+	
+	callPrice := S.Mul(n_d1).Sub(K.Mul(expRT).Mul(n_d2))
 	
 	result := map[string]interface{}{
 		"call_price":  callPrice.ToFloat64() * 1000.0,
@@ -243,11 +296,23 @@ func (ahs *AHSEngine) calculateVaR(params map[string]interface{}) (interface{}, 
 	pv := q131.FromFloat64(portfolioValue / 1000000.0)
 	vol := q131.FromFloat64(volatility)
 	
-	// Simplified VaR calculation: VaR = Portfolio Value × Volatility × Z-score
-	// For 95% confidence, Z ≈ 1.645
-	zScore := q131.FromFloat64(0.95) // Normalized
+	// Parametric VaR calculation: VaR = Portfolio Value × Volatility × Z-score
+	// Correct Z-scores for confidence levels:
+	// 95% -> 1.64485
+	// 99% -> 2.32635
+	var z float64
+	if confidenceLevel >= 0.99 {
+		z = 2.32635
+	} else if confidenceLevel >= 0.95 {
+		z = 1.64485
+	} else {
+		z = 1.28155 // 90% default
+	}
 	
-	var_value := pv.Mul(vol).Mul(zScore)
+	// Q1.31 can only represent [-1, 1). For Z-scores > 1, we must scale the calculation.
+	// VaR = PV * (Vol * Z)
+	volZ := vol.Mul(q131.FromFloat64(z / 2.0)).Add(vol.Mul(q131.FromFloat64(z / 2.0)))
+	var_value := pv.Mul(volZ)
 	
 	result := map[string]interface{}{
 		"var":              var_value.ToFloat64() * 1000000.0,
@@ -446,4 +511,53 @@ func weightsToFloat(weights []q131.Q131) []float64 {
 		result[i] = w.ToFloat64()
 	}
 	return result
+}
+
+// approxErf provides a deterministic approximation of the error function for Normal CDF.
+func approxErf(x q131.Q131) q131.Q131 {
+	// Abramowitz and Stegun approximation: erf(x) ≈ 1 - (1/(1+p*x)^4) for x > 0
+	// p = 0.47047, a1 = 0.3480242, a2 = -0.0958798, a3 = 0.7478556
+	
+	if x.Compare(q131.Zero) < 0 {
+		return approxErf(x.Abs()).Neg()
+	}
+	
+	p := q131.FromFloat64(0.47047)
+	a1 := q131.FromFloat64(0.3480242)
+	a2 := q131.FromFloat64(-0.0958798)
+	a3 := q131.FromFloat64(0.7478556)
+	
+	t := q131.One.Div(q131.One.Add(p.Mul(x)))
+	
+	// y = a1*t + a2*t^2 + a3*t^3
+	term1 := a1.Mul(t)
+	term2 := a2.Mul(t.Mul(t))
+	term3 := a3.Mul(t.Mul(t).Mul(t))
+	
+	y := term1.Add(term2).Add(term3)
+	
+	// erf(x) ≈ 1 - y * exp(-x^2)
+	xSq := x.Mul(x)
+	expNegXSq := xSq.Neg().Exp()
+	
+	return q131.One.Sub(y.Mul(expNegXSq))
+}
+
+// weightsToFloat converts Q1.31 weights to float64 for display.
+func weightsToFloat(weights []q131.Q131) []float64 {
+	result := make([]float64, len(weights))
+	for i, w := range weights {
+		result[i] = w.ToFloat64()
+	}
+	return result
+}
+
+// hashResult generates a SHA-256 hash of the calculation result.
+func (ahs *AHSEngine) hashResult(result CalculationResult) string {
+	data, err := json.Marshal(result)
+	if err != nil {
+		return ""
+	}
+	hash := sha256.Sum256(data)
+	return hex.EncodeToString(hash[:])
 }

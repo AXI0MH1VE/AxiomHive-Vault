@@ -5,15 +5,14 @@
 # GOVERNANCE & COMPLIANCE
 # ============================================================================
 governance:
-  compliance_id: "OMEGA-7N-RCSM-001"
-  target_tco_metric: 1460000000000.00  # $1.46 Trillion market disruption target
+  compliance_id: "AXIOM-VAULT-PROTOTYPE"
+  target_metric: 100.0
   
 # ============================================================================
-# INVARIANT WEALTH KERNEL (IWK) - PROPRIETARY
+# SERVICE CONFIGURATION
 # ============================================================================
-iwk:
-  license_active: true
-  payout_invariant: "bc1qw4exe0qvetqwdfyh2m6d58uqrgea5dke3wlc82"  # BTC payout address
+service:
+  active: true
   
 # ============================================================================
 # SERVER CONFIGURATION
@@ -32,7 +31,7 @@ server:
 auth:
   # JWKS (JSON Web Key Set) configuration
   jwks:
-    endpoint: "https://auth.axiomhive.com/keys"
+    endpoint: "https://auth.example.com/keys"
     refresh_interval: 1h
     timeout: 10s
     
@@ -83,7 +82,7 @@ database:
     migrations_path: "./migrations"
     
 # ============================================================================
-# DETENFORCE PROXY SETTINGS
+# PROXY SETTINGS
 # ============================================================================
 proxy:
   enabled: true
@@ -109,14 +108,13 @@ proxy:
     
   # Allowlist paths (deterministic routing)
   allowlist:
-    - "/api/v1/invariant/status"
-    - "/api/v1/auth/execute"
-    - "/api/v1/financial/ledger"
-    - "/api/v1/strategic/wealth"  # IWK license-gated
+    - "/api/v1/status"
+    - "/api/v1/auth"
+    - "/api/v1/ledger"
     - "/api/v1/health"
     
 # ============================================================================
-# AUDIT & LOGGING (Proof of Execution)
+# AUDIT & LOGGING
 # ============================================================================
 audit:
   enabled: true

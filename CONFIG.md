@@ -3,7 +3,7 @@ This file operationalizes the mathematically invariant AILock policy. It must be
 
 ## Governance Policy Table
 
-| ComplianceID | TargetTCOMetric | IWK_LICENSE_ACTIVE | InvariantPaths | MaxRequestsPerSecond | JWKS_Endpoint |
+| ComplianceID | TargetTCOMetric | Service_LICENSE_ACTIVE | InvariantPaths | MaxRequestsPerSecond | JWKS_Endpoint |
 |--------------|-----------------|-------------------|----------------|----------------------|---------------|
 | OMEGA-7N-RCSM-001 | $1,460,000,000,000.00 | true | `/api/v1/invariant/status`, `/api/v1/auth/execute`, `/api/v1/financial/ledger`, `/api/v1/strategic/wealth` | 5 | `https://auth.axiom_hive_xpii.com/keys` |
 
@@ -13,9 +13,9 @@ This file operationalizes the mathematically invariant AILock policy. It must be
 
 **TargetTCOMetric**: The actively targeted market valuation (SDP/API Management) for elimination by the Palo Neutralizer strategy.
 
-**IWK_LICENSE_ACTIVE**: **** Deterministic license check. If false, denies access to strategic wealth endpoints. This is the proprietary license flag gating access to the high-value Invariant Wealth Kernel (IWK) strategic endpoints.
+**Service_LICENSE_ACTIVE**: **** Deterministic license check. If false, denies access to strategic wealth endpoints. This is the proprietary license flag gating access to the high-value Service Activation (Service) strategic endpoints.
 
-**InvariantPaths**: Deterministic Allowlist. Only these paths are permitted. Access to the `/api/v1/strategic/wealth` path is contingent on the IWK license check.
+**InvariantPaths**: Deterministic Allowlist. Only these paths are permitted. Access to the `/api/v1/strategic/wealth` path is contingent on the Service license check.
 
 **MaxRequestsPerSecond**: Layer 7 Denial of Service (DoS) protection limit. Must be enforced deterministically.
 

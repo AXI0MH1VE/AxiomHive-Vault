@@ -1,6 +1,6 @@
-// Package satguard implements SAT Guards using Boolean Satisfiability (SAT) solvers
+// Package satguard implements a Rule Engine for runtime verification of all actions.
 // for runtime verification of all actions before execution.
-// This ensures structural impossibility of unsafe states through formal logic.
+// This ensures policy compliance through deterministic rule checking.
 package satguard
 
 import (
@@ -49,8 +49,8 @@ type GuardResult struct {
 	Metadata      map[string]interface{} `json:"metadata"`
 }
 
-// SATGuard is the runtime verification layer.
-type SATGuard struct {
+// RuleEngine (formerly SATGuard) is the runtime verification layer.
+type RuleEngine struct {
 	conditions      []Condition
 	authorizations  map[string]Authorization
 	actionLog       []GuardResult
@@ -68,9 +68,9 @@ type Hamiltonian struct {
 	GroundTruths    map[string]interface{}
 }
 
-// NewSATGuard creates a new SAT Guard validator.
-func NewSATGuard(strictMode bool) *SATGuard {
-	return &SATGuard{
+// NewRuleEngine creates a new Rule Engine validator.
+func NewRuleEngine(strictMode bool) *RuleEngine {
+	return &RuleEngine{
 		conditions:      make([]Condition, 0),
 		authorizations:  make(map[string]Authorization, 0),
 		actionLog:       make([]GuardResult, 0),
@@ -117,7 +117,7 @@ func (sg *SATGuard) SetGlobalKillSwitch(enabled bool) {
 // - P: Proposal (the action)
 // - C: Condition (environmental constraint)
 // - A: Authorization (user permission)
-func (sg *SATGuard) Validate(proposal ActionProposal) GuardResult {
+func (re *RuleEngine) Validate(proposal ActionProposal) GuardResult {
 	result := GuardResult{
 		Action:    proposal.Action,
 		Timestamp: time.Now().UTC(),
@@ -147,19 +147,19 @@ func (sg *SATGuard) Validate(proposal ActionProposal) GuardResult {
 	// Evaluate Hamiltonian constraints
 	hamiltonianValid := sg.evaluateHamiltonian(proposal)
 	
-	// SAT formula: P ∧ C ∧ A ∧ H
-	satisfiable := proposalValid && conditionsValid && authorizationValid && hamiltonianValid
+	// S// Rule logic: Proposal && Conditions && Authorization && StateValidation
+	valid := proposalValid && conditionsValid && authorizationValid && hamiltonianValid
 	
-	result.Satisfiable = satisfiable
-	if satisfiable {
+	result.Satisfiable = valid
+	if valid {
 		result.Decision = "ALLOW"
 	} else {
 		result.Decision = "DENY"
 	}
 	
 	// Generate logic receipt
-	result.Formula = fmt.Sprintf("P(%v) ∧ C(%v) ∧ A(%v) ∧ H(%v) = %v",
-		proposalValid, conditionsValid, authorizationValid, hamiltonianValid, satisfiable)
+	result.Formula = fmt.Sprintf("Proposal(%v) && Conditions(%v) && Authorized(%v) && StateValid(%v) = %v",
+		proposalValid, conditionsValid, authorizationValid, hamiltonianValid, valid)
 	
 	result.LogicReceipt = sg.generateLogicReceipt(proposal, proposalValid, conditionsValid, authorizationValid, hamiltonianValid)
 	

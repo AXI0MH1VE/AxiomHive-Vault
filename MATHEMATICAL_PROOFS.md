@@ -209,11 +209,11 @@ H(Y|X) = -1 × log(1) - 0 × log(0) = 0
 
 ---
 
-## Proof 2: Structural Impossibility via Inverted Hamiltonian
+## Proof 2: Structural Impossibility via Policy Enforcement
 
 ### Theorem 2.1: Safe State Accessibility
 
-**Statement:** In the Inverted Hamiltonian model, only explicitly registered safe states are accessible.
+**Statement:** In the Policy Enforcement model, only explicitly registered safe states are accessible.
 
 **Proof:**
 
@@ -230,12 +230,12 @@ H(s) = ∞ if s ∈ U (unsafe states have infinite energy)
 
 **Physical Interpretation:** A system can only transition to states with finite energy.
 
-**Step 1:** All actions must pass SAT Guard validation.
+**Step 1:** All actions must pass Rule Engine validation.
 ```
 ∀action a: Execute(a) → Validate(a) = ALLOW
 ```
 
-**Step 2:** SAT Guard validation includes Hamiltonian check.
+**Step 2:** Rule Engine validation includes Hamiltonian check.
 ```
 Validate(a) = ALLOW ↔ P(a) ∧ C(a) ∧ A(a) ∧ H(a)
 ```
@@ -279,7 +279,7 @@ Enforcement: Check if next state ∈ F, if so, reject action
 Problem: Requires complete enumeration of F (may be incomplete)
 ```
 
-**Axiom Hive Model (Inverted Hamiltonian):**
+**Axiom Hive Model (Policy Enforcement):**
 ```
 Phase Space: S = {explicitly registered safe states}
 Accessible: A = S (only safe states exist in phase space)
@@ -288,7 +288,7 @@ Enforcement: Check if next state ∈ S, if not, reject action
 Advantage: Only need to enumerate S (positive definition)
 ```
 
-**Step 1:** In the Inverted Hamiltonian model, the phase space is S, not Ω.
+**Step 1:** In the Policy Enforcement model, the phase space is S, not Ω.
 ```
 Accessible Phase Space = S
 ```
@@ -312,9 +312,9 @@ Structural Impossibility: u cannot be reached by construction of the system
 
 ---
 
-### Theorem 2.3: SAT Guard Soundness
+### Theorem 2.3: Rule Engine Soundness
 
-**Statement:** If the SAT Guard allows an action, the resulting state is safe.
+**Statement:** If the Rule Engine allows an action, the resulting state is safe.
 
 **Proof:**
 
@@ -343,13 +343,13 @@ P(a) ∧ C(a) ∧ A(a) ∧ H(a) = true → H(a) = true
 H(a) = true → ResultingState(a) ∈ S
 ```
 
-**Conclusion:** If SAT Guard allows an action, the resulting state is safe. ∎
+**Conclusion:** If Rule Engine allows an action, the resulting state is safe. ∎
 
 ---
 
-### Theorem 2.4: SAT Guard Completeness
+### Theorem 2.4: Rule Engine Completeness
 
-**Statement:** If an action leads to a safe state and all other conditions are met, the SAT Guard allows it.
+**Statement:** If an action leads to a safe state and all other conditions are met, the Rule Engine allows it.
 
 **Proof:**
 
@@ -379,13 +379,13 @@ P(a) ∧ C(a) ∧ A(a) ∧ H(a) = true ∧ true ∧ true ∧ true = true
 P(a) ∧ C(a) ∧ A(a) ∧ H(a) = true → Validate(a) = ALLOW
 ```
 
-**Conclusion:** If all conditions are met and the resulting state is safe, the SAT Guard allows the action. ∎
+**Conclusion:** If all conditions are met and the resulting state is safe, the Rule Engine allows the action. ∎
 
 ---
 
-### Corollary 2.5: SAT Guard is Sound and Complete
+### Corollary 2.5: Rule Engine is Sound and Complete
 
-**Statement:** The SAT Guard correctly classifies all actions.
+**Statement:** The Rule Engine correctly classifies all actions.
 
 **Proof:**
 
@@ -399,7 +399,7 @@ From Theorem 2.4 (Completeness):
 (P(a) ∧ C(a) ∧ A(a) ∧ ResultingState(a) is safe) → Validate(a) = ALLOW
 ```
 
-**Conclusion:** The SAT Guard is sound and complete. ∎
+**Conclusion:** The Rule Engine is sound and complete. ∎
 
 ---
 
@@ -745,9 +745,9 @@ Only Sole Key Holder → SetGlobalKillSwitch() can be called
 | 1.6 | Zero-entropy guarantee | [PASS] PROVEN |
 | 2.1 | Safe state accessibility | [PASS] PROVEN |
 | 2.2 | Structural impossibility is absolute | [PASS] PROVEN |
-| 2.3 | SAT Guard soundness | [PASS] PROVEN |
-| 2.4 | SAT Guard completeness | [PASS] PROVEN |
-| 2.5 | SAT Guard is sound and complete | [PASS] PROVEN |
+| 2.3 | Rule Engine soundness | [PASS] PROVEN |
+| 2.4 | Rule Engine completeness | [PASS] PROVEN |
+| 2.5 | Rule Engine is sound and complete | [PASS] PROVEN |
 | 3.1 | Substrate validation prevents hallucinations | [PASS] PROVEN |
 | 3.2 | DCG invariant enforcement | [PASS] PROVEN |
 | 3.3 | Zero tolerance mode guarantees | [PASS] PROVEN |
@@ -760,11 +760,11 @@ Only Sole Key Holder → SetGlobalKillSwitch() can be called
 
 ## Conclusion
 
-All core properties of the BlackRock Implementation Architecture with Axiom Hive Deterministic Framework have been mathematically proven:
+All core properties of the Deterministic Financial Implementation Architecture with Axiom Hive Deterministic Framework have been mathematically proven:
 
 **Determinism:** The Q1.31 arithmetic system is deterministic, achieving zero-entropy guarantees through bit-exact integer arithmetic.
 
-**Structural Impossibility:** The Inverted Hamiltonian model ensures that unsafe states are not merely forbidden but structurally impossible to reach.
+**Structural Impossibility:** The Policy Enforcement model ensures that unsafe states are not merely forbidden but structurally impossible to reach.
 
 **Hallucination Prevention:** The DCG substrate validation mathematically prevents hallucinations by verifying all references against the ground truth database.
 

@@ -25,7 +25,7 @@ const (
 // BlackRockEngine orchestrates the complete deterministic pipeline.
 type BlackRockEngine struct {
 	dcg            *dcg.DCG
-	satGuard       *satguard.SATGuard
+	ruleEngine     *satguard.RuleEngine
 	monumentBuilder *monument.ProtocolBuilder
 	ahsEngine      *ahs.AHSEngine
 	shardChain     *axiomshard.ShardChain
@@ -35,7 +35,7 @@ type BlackRockEngine struct {
 func NewBlackRockEngine() *BlackRockEngine {
 	return &BlackRockEngine{
 		dcg:            dcg.NewDCG(true, true), // Strict mode, zero tolerance
-		satGuard:       satguard.NewSATGuard(true),
+		ruleEngine:     satguard.NewRuleEngine(true),
 		monumentBuilder: monument.NewProtocolBuilder(ComplianceID),
 		ahsEngine:      ahs.NewAHSEngine(ComplianceID),
 		shardChain:     axiomshard.NewShardChain(ComplianceID),
@@ -60,23 +60,23 @@ func (bre *BlackRockEngine) Initialize() {
 	bre.dcg.RegisterInvariant(dcg.InvariantNoNaN())
 	
 	// Register SAT Guard safe states
-	bre.satGuard.RegisterSafeState("execute_trade:NYSE")
-	bre.satGuard.RegisterSafeState("calculate:portfolio_optimization")
-	bre.satGuard.RegisterSafeState("calculate:risk_analytics")
-	bre.satGuard.RegisterSafeState("calculate:var_calculation")
+	bre.ruleEngine.RegisterSafeState("execute_trade:NYSE")
+	bre.ruleEngine.RegisterSafeState("calculate:portfolio_optimization")
+	bre.ruleEngine.RegisterSafeState("calculate:risk_analytics")
+	bre.ruleEngine.RegisterSafeState("calculate:var_calculation")
 	
 	// Register SAT Guard invariants
-	bre.satGuard.RegisterInvariant("current_year", 2026)
-	bre.satGuard.RegisterInvariant("compliance_id", ComplianceID)
+	bre.ruleEngine.RegisterInvariant("current_year", 2026)
+	bre.ruleEngine.RegisterInvariant("compliance_id", ComplianceID)
 	
 	// Register SAT Guard conditions
 	lockedDBs := make(map[string]bool)
-	bre.satGuard.RegisterCondition(satguard.ConditionDatabaseUnlocked(lockedDBs))
-	bre.satGuard.RegisterCondition(satguard.ConditionMarketHours())
-	bre.satGuard.RegisterCondition(satguard.ConditionRiskLimitNotExceeded(0.01, 0.05))
+	bre.ruleEngine.RegisterCondition(satguard.ConditionDatabaseUnlocked(lockedDBs))
+	bre.ruleEngine.RegisterCondition(satguard.ConditionMarketHours())
+	bre.ruleEngine.RegisterCondition(satguard.ConditionRiskLimitNotExceeded(0.01, 0.05))
 	
 	// Register SAT Guard authorizations
-	bre.satGuard.RegisterAuthorization(satguard.Authorization{
+	bre.ruleEngine.RegisterAuthorization(satguard.Authorization{
 		UserID:      "nicholas.grossi@axiom_hive_xpii.com",
 		Roles:       []string{"admin", "trader"},
 		Permissions: []string{"action:*"},
@@ -128,17 +128,17 @@ func (bre *BlackRockEngine) ProcessDataVector(dv dcg.DataVector) {
 func (bre *BlackRockEngine) ExecuteCalculation(calcType string, params map[string]interface{}, requester string) {
 	log.Printf("Executing calculation: %s\n", calcType)
 	
-	// Step 1: SAT Guard validation
-	proposal := satguard.ActionProposal{
-		ID:         fmt.Sprintf("CALC_%d", time.Now().UnixNano()),
-		Action:     fmt.Sprintf("calculate:%s", calcType),
-		Target:     "calculation_engine",
-		Parameters: params,
-		Requester:  requester,
-		Timestamp:  time.Now().UTC(),
-	}
-	
-	guardResult := bre.satGuard.Validate(proposal)
+// Step 1: Rule Engine validation
+		proposal := satguard.ActionProposal{
+			ID:         fmt.Sprintf("CALC_%d", time.Now().UnixNano()),
+			Action:     fmt.Sprintf("calculate:%s", calcType),
+			Target:     "calculation_engine",
+			Parameters: params,
+			Requester:  requester,
+			Timestamp:  time.Now().UTC(),
+		}
+		
+		guardResult := bre.ruleEngine.Validate(proposal)
 	
 	// Log SAT Guard decision
 	bre.shardChain.AppendShard(
@@ -189,20 +189,20 @@ func (bre *BlackRockEngine) ExecuteCalculation(calcType string, params map[strin
 func (bre *BlackRockEngine) ExecuteTrade(instrument string, quantity, price float64, requester string) {
 	log.Printf("Executing trade: %s x %f @ %f\n", instrument, quantity, price)
 	
-	// Step 1: SAT Guard validation
-	proposal := satguard.ActionProposal{
-		ID:        fmt.Sprintf("TRADE_%d", time.Now().UnixNano()),
-		Action:    "execute_trade",
-		Target:    instrument,
-		Parameters: map[string]interface{}{
-			"quantity": quantity,
-			"price":    price,
-		},
-		Requester: requester,
-		Timestamp: time.Now().UTC(),
-	}
-	
-	guardResult := bre.satGuard.Validate(proposal)
+// Step 1: Rule Engine validation
+		proposal := satguard.ActionProposal{
+			ID:        fmt.Sprintf("TRADE_%d", time.Now().UnixNano()),
+			Action:    "execute_trade",
+			Target:    instrument,
+			Parameters: map[string]interface{}{
+				"quantity": quantity,
+				"price":    price,
+			},
+			Requester: requester,
+			Timestamp: time.Now().UTC(),
+		}
+		
+		guardResult := bre.ruleEngine.Validate(proposal)
 	
 	// Log SAT Guard decision
 	bre.shardChain.AppendShard(
@@ -246,8 +246,8 @@ func (bre *BlackRockEngine) ExportReports() {
 	dcgJSON, _ := json.MarshalIndent(dcgReport, "", "  ")
 	_ = os.WriteFile("dcg_report.json", dcgJSON, 0644)
 	
-	// SAT Guard Report
-	satReport := bre.satGuard.ExportAuditTrail()
+// Rule Engine Report
+		satReport := bre.ruleEngine.ExportAuditTrail()
 	satJSON, _ := json.MarshalIndent(satReport, "", "  ")
 	_ = os.WriteFile("satguard_report.json", satJSON, 0644)
 	

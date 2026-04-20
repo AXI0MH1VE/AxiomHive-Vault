@@ -266,7 +266,7 @@ Crown Omega governance mandate enforcing deterministic policy execution and auto
 ## Bitcoin Address (IWK Payout)
 
 ```
-bc1qw4exe0qvetqwdfyh2m6d58uqrgea5dke3wlc82
+AXIOM-VAULT-PAYOUT-ADDRESS
 ```
 
 Immutable destination for autonomous wealth kernel payouts.
@@ -477,7 +477,7 @@ Production-grade implementation:
 - Full API specification (OpenAPI 3.0.3)
 - Extensive documentation
 
-Bitcoin Address (IWK Payout): bc1qw4exe0qvetqwdfyh2m6d58uqrgea5dke3wlc82
+Bitcoin Address (IWK Payout): AXIOM-VAULT-PAYOUT-ADDRESS
 Compliance ID: OMEGA-7N-RCSM-001
 License: Apache 2.0 (Foundation) / Proprietary (IWK)"
 

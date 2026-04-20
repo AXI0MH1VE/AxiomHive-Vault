@@ -9,7 +9,7 @@
 
 ## Test Overview
 
-This document specifies comprehensive integration tests for the BlackRock Implementation Architecture. All tests verify end-to-end functionality, component integration, and compliance guarantees.
+This document specifies comprehensive integration tests for the Deterministic Financial Implementation Architecture. All tests verify end-to-end functionality, component integration, and compliance guarantees.
 
 ---
 
@@ -36,7 +36,7 @@ This document specifies comprehensive integration tests for the BlackRock Implem
 **Expected Flow:**
 1. Data Ingestion → Input received
 2. DCG Validation → VALID (no invariant violations)
-3. SAT Guard Validation → ALLOW (P=true, C=true, A=true, H=true)
+3. Rule Engine Validation → ALLOW (P=true, C=true, A=true, H=true)
 4. AHS Calculation → Executed with Q1.31 arithmetic
 5. Result Verification → Hash computed
 6. AxiomShard Logging → Shard appended to chain
@@ -345,11 +345,11 @@ This document specifies comprehensive integration tests for the BlackRock Implem
 
 ---
 
-## Test Suite 3: SAT Guard Validation
+## Test Suite 3: Rule Engine Validation
 
 ### Test 3.1: Unauthorized User
 
-**Objective:** Verify SAT Guard denies actions from unauthorized users.
+**Objective:** Verify Rule Engine denies actions from unauthorized users.
 
 **Input:**
 ```json
@@ -380,7 +380,7 @@ This document specifies comprehensive integration tests for the BlackRock Implem
 **Expected Flow:**
 1. Data Ingestion → Input received
 2. DCG Validation → VALID
-3. SAT Guard Validation → ✗ DENY (A=false: user not in authorization database)
+3. Rule Engine Validation → ✗ DENY (A=false: user not in authorization database)
 4. AxiomShard Logging → Logged with DENY decision
 5. Output → Logic receipt explaining denial
 
@@ -389,7 +389,7 @@ This document specifies comprehensive integration tests for the BlackRock Implem
 {
  "decision": "DENY",
  "formula": "P(true) ∧ C(true) ∧ A(false) ∧ H(true) = false",
- "logic_receipt": "SAT Guard Logic Receipt\n========================\nAction: execute_trade\nTarget: AAPL\nRequester: unauthorized@example.com\n\nValidation Results:\n Proposal Valid (P): true\n Conditions Met (C): true\n Authorized (A): false\n Hamiltonian Safe (H): true\n\n [FAIL] User lacks required permissions\n\n ✗ Constraints violated - Action DENIED",
+ "logic_receipt": "Rule Engine Logic Receipt\n========================\nAction: execute_trade\nTarget: AAPL\nRequester: unauthorized@example.com\n\nValidation Results:\n Proposal Valid (P): true\n Conditions Met (C): true\n Authorized (A): false\n Hamiltonian Safe (H): true\n\n [FAIL] User lacks required permissions\n\n ✗ Constraints violated - Action DENIED",
  "proposal_id": "TEST_SAT_001",
  "timestamp": "2026-01-18T12:00:00Z"
 }
@@ -407,7 +407,7 @@ This document specifies comprehensive integration tests for the BlackRock Implem
 
 ### Test 3.2: Unsafe State (Hamiltonian Violation)
 
-**Objective:** Verify SAT Guard denies actions leading to unsafe states.
+**Objective:** Verify Rule Engine denies actions leading to unsafe states.
 
 **Input:**
 ```json
@@ -436,7 +436,7 @@ This document specifies comprehensive integration tests for the BlackRock Implem
 **Expected Flow:**
 1. Data Ingestion → Input received
 2. DCG Validation → VALID
-3. SAT Guard Validation → ✗ DENY (H=false: resulting state "execute_trade:UNREGISTERED_EXCHANGE" not in safe states)
+3. Rule Engine Validation → ✗ DENY (H=false: resulting state "execute_trade:UNREGISTERED_EXCHANGE" not in safe states)
 4. AxiomShard Logging → Logged with DENY decision
 5. Output → Logic receipt explaining denial
 
@@ -445,7 +445,7 @@ This document specifies comprehensive integration tests for the BlackRock Implem
 {
  "decision": "DENY",
  "formula": "P(true) ∧ C(true) ∧ A(true) ∧ H(false) = false",
- "logic_receipt": "SAT Guard Logic Receipt\n========================\nAction: execute_trade\nTarget: UNREGISTERED_EXCHANGE\nRequester: nicholas.grossi@axiom_hive_xpii.com\n\nValidation Results:\n Proposal Valid (P): true\n Conditions Met (C): true\n Authorized (A): true\n Hamiltonian Safe (H): false\n\n [FAIL] Action would lead to unsafe state (Hamiltonian violation)\n\n ✗ Constraints violated - Action DENIED",
+ "logic_receipt": "Rule Engine Logic Receipt\n========================\nAction: execute_trade\nTarget: UNREGISTERED_EXCHANGE\nRequester: nicholas.grossi@axiom_hive_xpii.com\n\nValidation Results:\n Proposal Valid (P): true\n Conditions Met (C): true\n Authorized (A): true\n Hamiltonian Safe (H): false\n\n [FAIL] Action would lead to unsafe state (Hamiltonian violation)\n\n ✗ Constraints violated - Action DENIED",
  "proposal_id": "TEST_SAT_002",
  "timestamp": "2026-01-18T12:00:00Z"
 }
@@ -488,7 +488,7 @@ SetGlobalKillSwitch(true)
 **Expected Flow:**
 1. Data Ingestion → Input received
 2. DCG Validation → (skipped)
-3. SAT Guard Validation → ✗ HALT (globalKillSwitch=true, checked before all other logic)
+3. Rule Engine Validation → ✗ HALT (globalKillSwitch=true, checked before all other logic)
 4. AxiomShard Logging → Logged with HALT decision
 5. Output → Kill switch message
 
@@ -894,7 +894,7 @@ errors: ["Shard 5: Chain linkage broken", "Shard 5: Hash mismatch"]
 |------------|-------|--------|
 | Complete Pipeline Flow | 3 | [PASS] SPECIFIED |
 | DCG Validation | 4 | [PASS] SPECIFIED |
-| SAT Guard Validation | 3 | [PASS] SPECIFIED |
+| Rule Engine Validation | 3 | [PASS] SPECIFIED |
 | Q1.31 Determinism | 3 | [PASS] SPECIFIED |
 | AxiomShard Chain Integrity | 3 | [PASS] SPECIFIED |
 | Monument Protocol Execution | 1 | [PASS] SPECIFIED |
@@ -907,11 +907,11 @@ errors: ["Shard 5: Chain linkage broken", "Shard 5: Hash mismatch"]
 |-----------|-------------------|--------|
 | Q1.31 Arithmetic | | [PASS] SPECIFIED |
 | DCG Validation | | [PASS] SPECIFIED |
-| SAT Guards | | [PASS] SPECIFIED |
+| Rule Engines | | [PASS] SPECIFIED |
 | AxiomShard Logging | | [PASS] SPECIFIED |
 | Monument Protocol | | [PASS] SPECIFIED |
 | AHS Calculation Engine | | [PASS] SPECIFIED |
-| BlackRock Engine Orchestrator | | [PASS] SPECIFIED |
+| Deterministic Financial Engine Orchestrator | | [PASS] SPECIFIED |
 
 ### Compliance Verification
 

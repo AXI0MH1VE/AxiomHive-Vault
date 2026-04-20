@@ -1,17 +1,17 @@
-# BlackRock Implementation Architecture - Quick Start
+# Deterministic Financial Implementation Architecture - Quick Start
 
 ## Overview
 
-This directory contains the complete implementation of the **BlackRock Implementation Architecture** integrated with the **Axiom Hive Deterministic Framework**. The system transitions financial operations from probabilistic to deterministic paradigm with **zero-entropy guarantees** and **EU AI Act compliance**.
+This directory contains the complete implementation of the **Deterministic Financial Implementation Architecture** integrated with the **Axiom Hive Deterministic Framework**. The system transitions financial operations from probabilistic to deterministic paradigm with **zero-entropy guarantees** and **EU AI Act compliance**.
 
 ## Key Features
 
  **Q1.31 Fixed-Point Arithmetic** - Bit-exact reproducibility 
  **Deterministic Coherence Gate (DCG)** - Eliminates hallucinations 
- **SAT Guards** - Structural impossibility of unsafe states 
+ **Rule Engines** - Structural impossibility of unsafe states 
  **AxiomShard Audit Logging** - Immutable cryptographic chain 
  **Monument Protocol Generator** - Deterministic rulesets 
- **AHS Calculation Engine** - BlackRock-grade financial math 
+ **AHS Calculation Engine** - Deterministic Financial-grade financial math 
  **EU AI Act Compliance** - Articles 12, 13, 14, 15 
  **Zero External Dependencies** - Sovereign infrastructure
 
@@ -25,7 +25,7 @@ AxiomHiveXPII-Vault/
 │ │ └── q131_test.go
 │ ├── dcg/ # Deterministic Coherence Gate
 │ │ └── dcg.go
-│ ├── satguard/ # SAT Guards with Inverted Hamiltonian
+│ ├── satguard/ # Rule Engines with Policy Enforcement
 │ │ └── satguard.go
 │ ├── axiomshard/ # Cryptographic audit logging
 │ │ └── axiomshard.go
@@ -74,7 +74,7 @@ go build -o blackrock-engine ./cmd/blackrock-engine/
 
 ```
 =================================================
-BlackRock Implementation Architecture
+Deterministic Financial Implementation Architecture
 Axiom Hive Deterministic Framework
 Compliance ID: OMEGA-7N-RCSM-001
 Version: 1.0.0
@@ -148,12 +148,12 @@ if !result.Valid {
 - Zero-tolerance mode
 - Cryptographic proof of validation
 
-### 3. SAT Guards
+### 3. Rule Engines
 
 ```go
 import "github.com/AxiomHiveXPII/AILock/pkg/satguard"
 
-// Create SAT Guard
+// Create Rule Engine
 guard := satguard.NewSATGuard(true)
 
 // Register safe states
@@ -170,7 +170,7 @@ if result.Decision != "ALLOW" {
 
 **Key Features:**
 - Boolean satisfiability (SAT) validation
-- Inverted Hamiltonian (only safe states exist)
+- Policy Enforcement (only safe states exist)
 - Global kill switch
 - Logic receipts for transparency
 
@@ -265,7 +265,7 @@ deterministic, msg := engine.VerifyDeterminism(request)
 
 ### Article 13: Transparency 
 
-- Logic receipts from SAT Guards
+- Logic receipts from Rule Engines
 - Glass Box Mandate (all logic visible)
 - No black-box neural networks
 - Boolean clarity
@@ -291,7 +291,7 @@ deterministic, msg := engine.VerifyDeterminism(request)
 | Q1.31 Addition | <1ns | 1B+ ops/sec |
 | Q1.31 Multiplication | <5ns | 200M+ ops/sec |
 | DCG Validation | <5ms | 200 vectors/sec |
-| SAT Guard Check | <2ms | 500 checks/sec |
+| Rule Engine Check | <2ms | 500 checks/sec |
 | AHS Calculation | <50ms | 20 calcs/sec |
 | AxiomShard Append | <1ms | 1000 logs/sec |
 
@@ -397,9 +397,9 @@ if !result.Valid {
 }
 ```
 
-### SAT Guard Denial
+### Rule Engine Denial
 
-**Problem:** Action blocked by SAT Guard 
+**Problem:** Action blocked by Rule Engine 
 **Solution:** Review logic receipt
 
 ```go
@@ -416,7 +416,7 @@ See `cmd/blackrock-engine/main.go` for complete examples:
 1. Portfolio optimization with Q1.31
 2. VaR calculation with deterministic verification
 3. Liquidity gap analysis
-4. Trade execution with SAT Guard validation
+4. Trade execution with Rule Engine validation
 5. Compliance report generation
 
 ## Documentation
@@ -428,8 +428,8 @@ See `cmd/blackrock-engine/main.go` for complete examples:
 ## License
 
 - **Core AILock Foundation:** Apache 2.0
-- **IWK Strategic Layer:** Proprietary
-- **BlackRock Implementation:** Proprietary
+- **Service Strategic Layer:** Proprietary
+- **Deterministic Financial Implementation:** Proprietary
 
 ## Contact
 
@@ -441,5 +441,5 @@ See `cmd/blackrock-engine/main.go` for complete examples:
 ---
 
 **The Axiom of Determinism guarantees it.** 
-**The Invariant Wealth Kernel executes it.** 
+**The Service Activation executes it.** 
 **The Proof of Execution records it.**

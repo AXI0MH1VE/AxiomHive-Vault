@@ -13,7 +13,7 @@ import (
 // Config represents the complete AILock system configuration
 type Config struct {
 	Governance     GovernanceConfig     `yaml:"governance"`
-	IWK            IWKConfig            `yaml:"iwk"`
+	Service        ServiceConfig        `yaml:"service"`
 	Server         ServerConfig         `yaml:"server"`
 	Auth           AuthConfig           `yaml:"auth"`
 	Database       DatabaseConfig       `yaml:"database"`
@@ -30,10 +30,9 @@ type GovernanceConfig struct {
 	TargetTCOMetric float64 `yaml:"target_tco_metric"`
 }
 
-// IWKConfig contains Invariant Wealth Kernel configuration
-type IWKConfig struct {
-	LicenseActive   bool   `yaml:"license_active"`
-	PayoutInvariant string `yaml:"payout_invariant"`
+// ServiceConfig contains service activation configuration
+type ServiceConfig struct {
+	Active   bool   `yaml:"active"`
 }
 
 // ServerConfig contains HTTP server settings
@@ -282,13 +281,10 @@ func applyEnvOverrides(cfg *Config) {
 	if val := os.Getenv("AILOCK_COMPLIANCE_ID"); val != "" {
 		cfg.Governance.ComplianceID = val
 	}
-	if val := os.Getenv("AILOCK_IWK_LICENSE_ACTIVE"); val == "true" {
-		cfg.IWK.LicenseActive = true
+	if val := os.Getenv("AILOCK_SERVICE_ACTIVE"); val == "true" {
+		cfg.Service.Active = true
 	} else if val == "false" {
-		cfg.IWK.LicenseActive = false
-	}
-	if val := os.Getenv("AILOCK_IWK_PAYOUT_INVARIANT"); val != "" {
-		cfg.IWK.PayoutInvariant = val
+		cfg.Service.Active = false
 	}
 	if val := os.Getenv("AILOCK_SERVER_PORT"); val != "" {
 		_, _ = fmt.Sscanf(val, "%d", &cfg.Server.ListenPort)
@@ -329,9 +325,9 @@ func (c *Config) Validate() error {
 		return fmt.Errorf("database.uri is required")
 	}
 
-	// IWK validation
-	if c.IWK.LicenseActive && c.IWK.PayoutInvariant == "" {
-		return fmt.Errorf("iwk.payout_invariant is required when license is active")
+	// Service validation
+	if c.Service.Active {
+		log.Println("Service is active")
 	}
 
 	return nil

@@ -227,13 +227,25 @@ func (pb *ProtocolBuilder) FilterDataVector(protocol MonumentProtocol, data map[
 
 // evaluateAxiom evaluates an axiom against data.
 func (pb *ProtocolBuilder) evaluateAxiom(axiom Axiom, data map[string]interface{}) bool {
-	// Simplified evaluation - in production, use a proper logic engine
-	// This would parse and evaluate the formula against the data
-	
-	// For now, check if data satisfies basic constraints
+	// Evaluate axiom against data vector
 	if axiom.Metadata["type"] == "constraint" {
-		// Constraints must be satisfied
-		return true // Placeholder
+		// Check if the constraint exists in data and is true
+		if val, ok := data[axiom.Name]; ok {
+			if b, ok := val.(bool); ok {
+				return b
+			}
+		}
+		// For numeric constraints, check if they are within bounds
+		if threshold, ok := axiom.Metadata["threshold"].(float64); ok {
+			if val, ok := data[axiom.Metadata["key"].(string)].(float64); ok {
+				op, _ := axiom.Metadata["operator"].(string)
+				switch op {
+				case "<=": return val <= threshold
+				case ">=": return val >= threshold
+				case "==": return val == threshold
+				}
+			}
+		}
 	}
 	
 	return true

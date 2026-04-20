@@ -824,7 +824,7 @@ The Deterministic Audit Trail integrates with AxiomHiveXPII components:
 
 **AxiomShard Integration**: The audit trail uses the same cryptographic primitives (SHA-256, RSA signatures) as AxiomShard, enabling unified verification.
 
-**SAT Guard Integration**: SAT Guard logic receipts are automatically logged in the audit trail, providing complete transparency into decision logic.
+**Rule Engine Integration**: Rule Engine logic receipts are automatically logged in the audit trail, providing complete transparency into decision logic.
 
 **Q1.31 Integration**: Deterministic calculations using Q1.31 arithmetic are logged with bit-exact reproducibility guarantees.
 
