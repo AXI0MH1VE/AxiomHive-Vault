@@ -1,5 +1,5 @@
 # AxiomHiveXPII Vault: Deterministic Financial Infrastructure
-
+**CREATOR ATTRIBUTION: Nicholas M. Grossi**
 **Deterministic Financial Calculation Engine with Axiom Hive Framework**
 
 > **[WARNING] SECURITY NOTICE:** This repository contains sensitive infrastructure code. **NEVER commit real credentials, API keys, or secrets.** Always use environment variables and the provided configuration templates. See [SECURITY.md](SECURITY.md) for complete security guidelines.
